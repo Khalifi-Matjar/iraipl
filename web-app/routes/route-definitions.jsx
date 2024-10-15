@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Login, Welcome } from '../components';
+import { Dashboard, Home, Login, Welcome } from '../components';
 
 export const routesDefinitions = [
     {
@@ -13,5 +13,9 @@ export const routesDefinitions = [
     {
         path: '/login',
         element: <Login />,
+    },
+    {
+        path: '/dashboard',
+        element: <Dashboard />,
     },
 ];
