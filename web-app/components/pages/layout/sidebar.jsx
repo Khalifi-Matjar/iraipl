@@ -1,5 +1,6 @@
 import { Box, styled, Typography, Avatar, List, ListSubheader, ListItemButton, ListItemIcon, ListItemText, ListItem, IconButton, Divider } from '@mui/material';
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { GridViewOutlined } from '@mui/icons-material';
 
@@ -99,21 +100,29 @@ export const Sidebar = () => {
                 </MoreButton>
             </ProfileBox>
             <MenuList>
-                <List subheader={<StyledListSubheader> MENU UTAMA</StyledListSubheader>}>
+                <List subheader={<StyledListSubheader> MASTER DATA</StyledListSubheader>}>
                     <StyledListItem disablePadding sx={{ marginX: '10px' }}>
-                        <StyledListItemButton>
+                        <StyledListItemButton LinkComponent={RouterLink} to="/master-iuran">
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText color="" primary="Dashboard" />
+                            <StyledListItemText color="" primary="Jenis Iuran" />
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
-                        <StyledListItemButton>
+                        <StyledListItemButton LinkComponent={RouterLink} to="/penduduk">
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText color="" primary="Dashboard" />
+                            <StyledListItemText color="" primary="Penduduk" />
+                        </StyledListItemButton>
+                    </StyledListItem>
+                    <StyledListItem disablePadding>
+                        <StyledListItemButton LinkComponent={RouterLink} to="/kolektor">
+                            <ListItemIcon>
+                                <GridViewOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <StyledListItemText color="" primary="Kolektor" />
                         </StyledListItemButton>
                     </StyledListItem>
                 </List>

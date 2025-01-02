@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dashboard, Home, Login, Welcome } from '../components';
+import { Dashboard, Home, Kolektor, Login, MasterIuran, Penduduk, Welcome } from '../components';
 
 export const routesDefinitions = [
     {
@@ -17,5 +17,17 @@ export const routesDefinitions = [
     {
         path: '/dashboard',
         element: <Dashboard />,
+    },
+    {
+        path: '/master-iuran',
+        element: <MasterIuran />,
+    },
+    {
+        path: '/penduduk',
+        element: <Penduduk />,
+    },
+    {
+        path: '/kolektor',
+        element: <Kolektor />,
     },
 ];

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
+import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import PropTypes from 'prop-types';
 
 /**
  *
@@ -11,7 +11,7 @@ import ViewWeekIcon from '@mui/icons-material/ViewWeek';
  * @param {React.component} props.icon - icon that shows before title. Default is ViewWeekIcon
  * @returns {React.component}
  */
-export const Heading = ({ title, icon, postButtons }) => {
+export const Heading = ({ title, icon }) => {
     return (
         <AppBar color="info">
             <Toolbar>
@@ -24,4 +24,9 @@ export const Heading = ({ title, icon, postButtons }) => {
             </Toolbar>
         </AppBar>
     );
+};
+
+Heading.propTypes = {
+    title: PropTypes.string,
+    icon: PropTypes.object,
 };

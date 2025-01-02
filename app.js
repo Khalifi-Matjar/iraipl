@@ -8,6 +8,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var welcomeRouter = require('./routes/welcome');
 var authenticationRouter = require('./routes/authentication');
+var masterIuranRouter = require('./routes/master-iuran');
+var pendudukRouter = require('./routes/penduduk');
+var kolektorRouter = require('./routes/kolektor');
 
 /** App DB works */
 var { sequelize } = require('./database/models');
@@ -49,6 +52,9 @@ app.use('/', indexRouter);
 // All API routes goes here
 app.use('/api/welcome', welcomeRouter);
 app.use('/api/authentication', authenticationRouter);
+app.use('/api/master-iuran', masterIuranRouter);
+app.use('/api/penduduk', pendudukRouter);
+app.use('/api/kolektor', kolektorRouter);
 
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {
