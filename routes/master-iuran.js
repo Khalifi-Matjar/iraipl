@@ -79,7 +79,7 @@ router.post('/add', async function (req, res, _next) {
     res.end();
 });
 
-router.post('/edit', async function (req, res, _next) {
+router.post('/update', async function (req, res, _next) {
     const findUser = await authorizeApi(req);
     let httpResponseCode;
     let httpResponse;
@@ -88,11 +88,10 @@ router.post('/edit', async function (req, res, _next) {
         const iuran = await db.MasterIuran.findByPk(req.query.id);
         const { iuranName, requireCollector } = req.body;
 
-        iuran.update({
+        await iuran.update({
             iuranName,
             requireCollector,
         });
-        iuran.save();
 
         httpResponseCode = 200;
         httpResponse = iuran
@@ -109,6 +108,53 @@ router.post('/edit', async function (req, res, _next) {
                   success: false,
                   message: 'Internal error',
               };
+    } else {
+        httpResponseCode = 401;
+        httpResponse = {
+            success: false,
+            message: 'Unauthorized user',
+        };
+    }
+
+    res.status(httpResponseCode);
+    res.json(httpResponse);
+    res.end();
+});
+
+router.delete('/delete', async function (req, res, _next) {
+    const findUser = await authorizeApi(req);
+    let httpResponseCode;
+    let httpResponse;
+
+    if (!!findUser) {
+        const id = req.query.id;
+
+        try {
+            const iuran = await db.MasterIuran.findByPk(id);
+            await iuran.destroy();
+
+            httpResponseCode = 200;
+            httpResponse = {
+                success: true,
+                message: 'Iuran has been deleted successfully',
+                metadata: {
+                    findUser,
+                    id,
+                },
+            };
+        } catch (error) {
+            if (error) {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: error.message,
+                    metadata: {
+                        error,
+                        id,
+                    },
+                };
+            }
+        }
     } else {
         httpResponseCode = 401;
         httpResponse = {

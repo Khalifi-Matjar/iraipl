@@ -1,92 +1,88 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { Button } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
-import { getIuran } from './master-iuran-functions';
-import isUndefined from 'lodash/isUndefined';
+import { Button } from '@mui/material';
+import { findData, listData } from './master-iuran-functions';
 
-const buildIuranformDef = (iuran) => [
-    {
-        name: 'iuranName',
-        id: 'iuranName',
-        label: 'Nama iuran',
-        gridColumn: 12,
-        initialValue: isUndefined(iuran) ? undefined : iuran.iuranName,
-        validationSchema: Yup.string().required('Berikan nama iuran'),
-    },
-    {
-        name: 'requireCollector',
-        id: 'requireCollector',
-        label: 'Butuh kolektor?',
-        gridColumn: 6,
-        initialValue: isUndefined(iuran) ? undefined : iuran.requireCollector.toString(),
-        options: [
-            { value: 1, label: 'Butuh kolektor' },
-            { value: 0, label: 'Tidak membutuhkan kolektor' },
-        ],
-        validationSchema: Yup.string().required('Pilih apakah butuh kolektor?'),
-    },
-];
-
-export const useMasterIuranHooks = () => {
-    const [iuranMasterId, setIuranMasterId] = useState(null);
-    const [iuranMasterTableData, setIuranMasterTableData] = useState([]);
-    const [iuranFormDefinition, setIuranFormDefinition] = useState(buildIuranformDef());
-    const iuranMasterTableColDef = useMemo(() => [
-        {
-            header: 'No',
-            accessorKey: 'no',
-        },
-        {
-            header: 'Nama Iuran',
-            accessorKey: 'iuranName',
-        },
-        {
-            header: 'Butuh Collector',
-            accessorKey: 'requireCollector',
-        },
-        {
-            header: '',
-            accessorKey: 'id',
-            cell: (value) => {
-                return (
-                    <Button
-                        variant="contained"
-                        onClick={() =>
-                            getIuran(({ iuran }) => {
-                                setIuranFormDefinition(buildIuranformDef(iuran));
-                                setIuranMasterId(iuran.id);
-                            }, value.row.original.id)
-                        }
-                    >
-                        Edit
-                    </Button>
-                );
+export const useMasterIuran = () => {
+    const [id, setId] = useState(null);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [formValue, setFormValue] = useState({});
+    const [tblRows, setTblRows] = useState([]);
+    const tblColDef = useMemo(
+        () => [
+            {
+                header: '',
+                accessorKey: 'id',
+                size: 30,
+                cell: (value) => {
+                    return (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            fullWidth
+                            onClick={() => {
+                                findData(value.row.original.id, ({ id, iuranName, requireCollector }) => {
+                                    setId(id);
+                                    setFormValue({
+                                        iuranName,
+                                        requireCollector,
+                                    });
+                                    setIsFormOpen(true);
+                                });
+                            }}
+                        >
+                            Edit
+                        </Button>
+                    );
+                },
             },
-        },
-    ]);
+            { header: 'Nama Iuran', accessorKey: 'iuranName' },
+            { header: 'Butuh Kolektor', accessorKey: 'requireCollector', cell: (value) => (value.row.original.requireCollector === 1 ? 'Butuh kolektor' : 'Tidak butuh kolektor') },
+        ],
+        []
+    );
+
+    const formDef = useMemo(() => {
+        return [
+            {
+                name: 'iuranName',
+                id: 'iuranName',
+                label: 'Nama Iuran',
+                gridColumn: 12,
+                validationSchema: Yup.string().required('Berikan nama iuran'),
+            },
+            {
+                name: 'requireCollector',
+                id: 'requireCollector',
+                label: 'Butuh Kolektor?',
+                gridColumn: 12,
+                options: [
+                    { value: 1, label: 'Ya, butuh kolektor' },
+                    { value: 0, label: 'Tidak butuh kolektor' },
+                ],
+                optionsFieldType: 'radio',
+                validationSchema: Yup.string().required('Harap pilih salah satu'),
+            },
+        ];
+    }, []);
 
     useEffect(() => {
-        getIuran(({ iuran }) => {
-            setIuranMasterTableData(
-                iuran.map(({ id, iuranName, requireCollector }, index) => ({
-                    no: index + 1,
-                    id,
-                    requireCollector: requireCollector ? 'Butuh collector' : 'Tidak membutuhkan collector',
-                    iuranName,
-                }))
-            );
+        // List all data here
+        listData((iuran) => {
+            setTblRows(iuran);
         });
     }, []);
 
     return {
-        iuranMasterId,
-        iuranMasterTableColDef,
-        iuranMasterTableData,
-        setIuranMasterTableData,
-        iuranFormDefinition,
-        resetForm: () => {
-            setIuranFormDefinition(buildIuranformDef());
-            setIuranMasterId(null);
-        },
+        isFormOpen,
+        setIsFormOpen,
+        tblColDef,
+        formDef,
+        tblRows,
+        setTblRows,
+        formValue,
+        setFormValue,
+        id,
+        setId,
     };
 };

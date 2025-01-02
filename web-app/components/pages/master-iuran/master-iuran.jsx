@@ -1,46 +1,49 @@
 import React from 'react';
-import isNull from 'lodash/isNull';
-import { Grid } from '@mui/material';
-import { FormBuilder } from '../../organisms/form-builder';
+import { Button } from '@mui/material';
 import { LocalTable } from '../../organisms/local-table';
 import { MasterPage } from '../master-page';
-import { useMasterIuranHooks } from './master-iuran-hooks';
-import { getIuran, saveMasterIuran } from './master-iuran-functions';
+import { useMasterIuran } from './master-iuran-hooks';
+import { MasterIuranFormDialog } from './master-iuran-form-dialog';
+import { deleteData, listData, mutateData } from './master-iuran-functions';
 
 export const MasterIuran = () => {
-    const { iuranMasterId, iuranMasterTableColDef, iuranMasterTableData, setIuranMasterTableData, iuranFormDefinition, resetForm } = useMasterIuranHooks();
+    const { tblColDef, tblRows, setTblRows, setFormValue, setId, isFormOpen, setIsFormOpen, formDef, formValue, id } = useMasterIuran();
 
     return (
         <MasterPage>
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
-                    <LocalTable columns={iuranMasterTableColDef} data={iuranMasterTableData} />
-                </Grid>
-                <Grid item xs={6}>
-                    <FormBuilder
-                        formDefinitions={iuranFormDefinition}
-                        submitDefinition={{
-                            label: isNull(iuranMasterId) ? 'Save' : 'Edit',
-                            onSubmit: saveMasterIuran(
-                                iuranMasterId,
-                                () =>
-                                    void getIuran(
-                                        ({ iuran }) =>
-                                            void setIuranMasterTableData(
-                                                iuran.map(({ id, iuranName, requireCollector }, index) => ({
-                                                    no: index + 1,
-                                                    id,
-                                                    requireCollector: requireCollector ? 'Butuh collector' : 'Tidak membutuhkan collector',
-                                                    iuranName,
-                                                }))
-                                            )
-                                    )
-                            ),
-                            onReset: resetForm,
-                        }}
-                    />
-                </Grid>
-            </Grid>
+            <Button
+                variant="contained"
+                onClick={() => {
+                    setFormValue({});
+                    setId(null);
+                    setIsFormOpen(true);
+                }}
+            >
+                Tambah Data Iuran
+            </Button>
+            <br />
+            <LocalTable columns={tblColDef} data={tblRows} title="Jenis-Jenis Iuran" />
+            <MasterIuranFormDialog
+                isOpen={isFormOpen}
+                formDef={formDef}
+                formValue={formValue}
+                id={id}
+                onSubmit={mutateData(id, ({ success }) => {
+                    if (success) {
+                        setIsFormOpen(false);
+                        listData((iuran) => void setTblRows(iuran));
+                    }
+                })}
+                onDelete={() => {
+                    deleteData(id, ({ success }) => {
+                        if (success) {
+                            setIsFormOpen(false);
+                            listData((iuran) => void setTblRows(iuran));
+                        }
+                    });
+                }}
+                onClose={() => void setIsFormOpen(false)}
+            />
         </MasterPage>
     );
 };

@@ -96,7 +96,7 @@ export const useKolektor = () => {
                 label: 'Password',
                 gridColumn: 6,
                 type: 'password',
-                validationSchema: Yup.string().required('Berikan nama password'),
+                validationSchema: Yup.string().required('Berikan password'),
             },
             {
                 name: 'password2',
@@ -105,7 +105,7 @@ export const useKolektor = () => {
                 gridColumn: 6,
                 type: 'password',
                 validationSchema: Yup.string()
-                    .required('Berikan nama password yang sama')
+                    .required('Berikan password yang sama')
                     .oneOf([Yup.ref('password1'), null], 'Password konfirmasi harus sama'),
             },
         ],

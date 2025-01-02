@@ -79,9 +79,6 @@ export const FormBuilder = ({ formDefinitions, submitDefinition, valueDefinition
                             <Button variant="contained" type="submit">
                                 {submitDefinition?.label ?? 'Submit'}
                             </Button>
-                            <Button type="reset" variant="outlined" onClick={!!submitDefinition && submitDefinition?.onReset && submitDefinition?.onReset}>
-                                Reset
-                            </Button>
                         </Stack>
                     )}
                 </Grid>
@@ -124,7 +121,6 @@ FormBuilder.propTypes = {
     submitDefinition: PropTypes.shape({
         label: PropTypes.string,
         onSubmit: PropTypes.func,
-        onReset: PropTypes.func,
     }),
     valueDefinitions: PropTypes.object,
 };

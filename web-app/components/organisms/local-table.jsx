@@ -13,6 +13,10 @@ const StyledBox = styled(Box)(() => ({
     backgroundColor: '#9f9f9f30',
 }));
 
+const StyledTable = styled(Table)(() => ({
+    tableLayout: 'fixed',
+}));
+
 export const LocalTable = ({ columns, data, title }) => {
     const tableInstance = useReactTable({
         columns,
@@ -35,7 +39,14 @@ export const LocalTable = ({ columns, data, title }) => {
             </StyledBox>
             <Divider />
             <TableContainer>
-                <Table size="small">
+                <StyledTable size="small">
+                    <colgroup>
+                        {tableInstance.getHeaderGroups().map((headerGroup) =>
+                            headerGroup.headers.map((header, index) => {
+                                return <col key={index} style={{ width: `${header.getSize()}px` }} />;
+                            })
+                        )}
+                    </colgroup>
                     <TableHead>
                         {tableInstance.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
@@ -56,7 +67,7 @@ export const LocalTable = ({ columns, data, title }) => {
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
+                </StyledTable>
             </TableContainer>
         </StyledCard>
     );
