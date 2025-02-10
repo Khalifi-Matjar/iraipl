@@ -1,5 +1,14 @@
 import React from 'react';
-import { Dashboard, Home, Kolektor, Login, MasterIuran, Penduduk, Welcome } from '../components';
+import {
+    Dashboard,
+    Home,
+    Kolektor,
+    Login,
+    MasterIuran,
+    Penduduk,
+    PenerimaanIuran,
+    Welcome,
+} from '../components';
 
 export const routesDefinitions = [
     {
@@ -29,5 +38,9 @@ export const routesDefinitions = [
     {
         path: '/kolektor',
         element: <Kolektor />,
+    },
+    {
+        path: '/penerimaan-iuran-non-kolektor',
+        element: <PenerimaanIuran />,
     },
 ];

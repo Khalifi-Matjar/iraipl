@@ -21,16 +21,19 @@ export const useKolektor = () => {
                             size="small"
                             fullWidth
                             onClick={() => {
-                                findData(value.row.original.id, ({ id, name, contact, email, address }) => {
-                                    setId(id);
-                                    setFormValue({
-                                        name,
-                                        contact,
-                                        email,
-                                        address,
-                                    });
-                                    setIsFormOpen(true);
-                                });
+                                findData(
+                                    value.row.original.id,
+                                    ({ id, name, contact, email, address }) => {
+                                        setId(id);
+                                        setFormValue({
+                                            name,
+                                            contact,
+                                            email,
+                                            address,
+                                        });
+                                        setIsFormOpen(true);
+                                    }
+                                );
                             }}
                         >
                             Edit
@@ -53,7 +56,9 @@ export const useKolektor = () => {
                 id: 'name',
                 label: 'Nama',
                 gridColumn: 6,
-                validationSchema: Yup.string().required('Berikan nama kolektor'),
+                validationSchema: Yup.string().required(
+                    'Berikan nama kolektor'
+                ),
             },
             {
                 name: 'address',
@@ -62,20 +67,26 @@ export const useKolektor = () => {
                 gridColumn: 12,
                 multiline: true,
                 rows: 3,
-                validationSchema: Yup.string().required('Berikan alamat lengkap'),
+                validationSchema: Yup.string().required(
+                    'Berikan alamat lengkap'
+                ),
             },
             {
                 name: 'contact',
                 id: 'contact',
                 label: 'No. Whatsapp / Telepon',
                 gridColumn: 4,
-                validationSchema: Yup.string().required('Berikan no. Whatsapp / no. telepon'),
+                validationSchema: Yup.string().required(
+                    'Berikan no. Whatsapp / no. telepon'
+                ),
             },
             {
                 name: 'email',
                 id: 'email',
                 label: 'Email',
-                validationSchema: Yup.string().required('Berikan email').email('Format email tidak valid'),
+                validationSchema: Yup.string()
+                    .required('Berikan email')
+                    .email('Format email tidak valid'),
                 gridColumn: 4,
             },
         ];
@@ -106,7 +117,10 @@ export const useKolektor = () => {
                 type: 'password',
                 validationSchema: Yup.string()
                     .required('Berikan password yang sama')
-                    .oneOf([Yup.ref('password1'), null], 'Password konfirmasi harus sama'),
+                    .oneOf(
+                        [Yup.ref('password1'), null],
+                        'Password konfirmasi harus sama'
+                    ),
             },
         ],
         []

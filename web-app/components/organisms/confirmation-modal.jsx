@@ -1,8 +1,21 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from '@mui/material';
 import PropTypes from 'prop-types';
 
-export const ConfirmationModal = ({ open, title, message, onConfirmYesAction, onConfirmNoAction = () => {} }) => {
+export const ConfirmationModal = ({
+    open,
+    title,
+    message,
+    onConfirmYesAction,
+    onConfirmNoAction = () => {},
+}) => {
     return (
         <Dialog open={open}>
             <DialogTitle>{title}</DialogTitle>

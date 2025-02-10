@@ -14,7 +14,9 @@ router.get('/find', async function (req, res, _next) {
     if (!!findUser) {
         try {
             const id = req.query.id;
-            const kolektor = isUndefined(id) ? await db.Kolektor.findAll({ include: db.User }) : await db.Kolektor.findByPk(id, { include: db.User });
+            const kolektor = isUndefined(id)
+                ? await db.Kolektor.findAll({ include: db.User })
+                : await db.Kolektor.findByPk(id, { include: db.User });
 
             httpResponseCode = 200;
             httpResponse = {
@@ -111,7 +113,9 @@ router.post('/update', async function (req, res, _next) {
         const { name, contact, email, address } = req.body;
 
         try {
-            const kolektor = await db.Kolektor.findByPk(id, { include: db.User });
+            const kolektor = await db.Kolektor.findByPk(id, {
+                include: db.User,
+            });
             await kolektor.update({
                 name,
                 contact,
@@ -222,7 +226,9 @@ router.post('/reset-password', async function (req, res, _next) {
         const { password1 } = req.body;
 
         try {
-            const kolektor = await db.Kolektor.findByPk(id, { include: db.User });
+            const kolektor = await db.Kolektor.findByPk(id, {
+                include: db.User,
+            });
 
             if (isNull(kolektor.User)) {
                 // If he has no data in tbl-user, then create it

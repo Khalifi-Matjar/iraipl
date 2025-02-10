@@ -15,7 +15,13 @@ export const Heading = ({ title, icon }) => {
     return (
         <AppBar color="info">
             <Toolbar>
-                <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                >
                     {icon ?? <ViewWeekIcon />}
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

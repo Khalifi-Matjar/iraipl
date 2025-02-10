@@ -46,3 +46,29 @@ export const findPenduduk = (id, callback) => {
         },
     }).then((response) => void callback(response.data.penduduk));
 };
+
+export const pushRetribution = (id, callback) => (value, resetForm) => {
+    axios({
+        method: 'post',
+        url: `/api/penduduk/push-retribution?id=${id}`,
+        data: { ...value },
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+        },
+    }).then((response) => {
+        callback(response.data);
+        resetForm();
+    });
+};
+
+export const deleteRetribution = (id, callback) => {
+    axios({
+        method: 'delete',
+        url: `/api/penduduk/delete-retribution?id=${id}`,
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+        },
+    })
+        .then((response) => void callback(response.data))
+        .catch((error) => console.error(error));
+};

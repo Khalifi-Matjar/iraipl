@@ -29,7 +29,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Rewrite url to '/' if it's not API, images, css, or JS files
 app.use(function (req, _res, next) {
-    const isImageCssOrJSFile = /\.(jpg|jpeg|png|webp|avif|gif|css|js)$/.test(req.url);
+    const isImageCssOrJSFile = /\.(jpg|jpeg|png|webp|avif|gif|css|js)$/.test(
+        req.url
+    );
     const isApiUrl = /^\/api\/*/.test(req.url);
 
     if (!isImageCssOrJSFile && !isApiUrl) {
@@ -41,7 +43,12 @@ app.use(function (req, _res, next) {
 // Test DB connection. Exit application if couldn't be established
 sequelize
     .authenticate()
-    .then(() => void console.log('Connection to database has been established successfully.'))
+    .then(
+        () =>
+            void console.log(
+                'Connection to database has been established successfully.'
+            )
+    )
     .catch((error) => {
         throw Error(error);
     });

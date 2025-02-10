@@ -1,4 +1,17 @@
-import { Box, styled, Typography, Avatar, List, ListSubheader, ListItemButton, ListItemIcon, ListItemText, ListItem, IconButton, Divider } from '@mui/material';
+import {
+    Box,
+    styled,
+    Typography,
+    Avatar,
+    List,
+    ListSubheader,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    ListItem,
+    IconButton,
+    Divider,
+} from '@mui/material';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -88,11 +101,19 @@ export const Sidebar = () => {
             <ProfileBox>
                 <StyledPhoto>A</StyledPhoto>
                 <NameDetails>
-                    <StyledName variant="subtitle1" fontSize="medium" fontWeight="bold">
-                        Fathur Rahmann
+                    <StyledName
+                        variant="subtitle1"
+                        fontSize="medium"
+                        fontWeight="bold"
+                    >
+                        Administrator
                     </StyledName>
-                    <StyledEmail variant="caption" fontWeight="thin" color="grey">
-                        04Fathur.rahman@gmail.com
+                    <StyledEmail
+                        variant="caption"
+                        fontWeight="thin"
+                        color="grey"
+                    >
+                        admin@dev
                     </StyledEmail>
                 </NameDetails>
                 <MoreButton>
@@ -100,17 +121,30 @@ export const Sidebar = () => {
                 </MoreButton>
             </ProfileBox>
             <MenuList>
-                <List subheader={<StyledListSubheader> MASTER DATA</StyledListSubheader>}>
+                <List
+                    subheader={
+                        <StyledListSubheader> MASTER DATA</StyledListSubheader>
+                    }
+                >
                     <StyledListItem disablePadding sx={{ marginX: '10px' }}>
-                        <StyledListItemButton LinkComponent={RouterLink} to="/master-iuran">
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/master-iuran"
+                        >
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText color="" primary="Jenis Iuran" />
+                            <StyledListItemText
+                                color=""
+                                primary="Jenis Iuran"
+                            />
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
-                        <StyledListItemButton LinkComponent={RouterLink} to="/penduduk">
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/penduduk"
+                        >
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
@@ -118,7 +152,10 @@ export const Sidebar = () => {
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
-                        <StyledListItemButton LinkComponent={RouterLink} to="/kolektor">
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/kolektor"
+                        >
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
@@ -127,13 +164,35 @@ export const Sidebar = () => {
                     </StyledListItem>
                 </List>
                 <Divider variant="middle" />
-                <List sx={{ marginTop: '10px' }} subheader={<StyledListSubheader> MENU UTAMA</StyledListSubheader>}>
+                <List
+                    sx={{ marginTop: '10px' }}
+                    subheader={
+                        <StyledListSubheader>
+                            {' '}
+                            PENERIMAAN IURAN
+                        </StyledListSubheader>
+                    }
+                >
                     <StyledListItem disablePadding>
-                        <StyledListItemButton>
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/penerimaan-iuran-kolektor"
+                        >
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText primary="Dashboard" />
+                            <StyledListItemText primary="Kolektor" />
+                        </StyledListItemButton>
+                    </StyledListItem>
+                    <StyledListItem disablePadding>
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/penerimaan-iuran-non-kolektor"
+                        >
+                            <ListItemIcon>
+                                <GridViewOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <StyledListItemText primary="Non Kolektor" />
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
@@ -141,7 +200,42 @@ export const Sidebar = () => {
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText color="" primary="Dashboard" />
+                            <StyledListItemText primary="Validasi" />
+                        </StyledListItemButton>
+                    </StyledListItem>
+                </List>
+                <List
+                    sx={{ marginTop: '10px' }}
+                    subheader={
+                        <StyledListSubheader> LAPORAN</StyledListSubheader>
+                    }
+                ></List>
+                <List
+                    sx={{ marginTop: '10px' }}
+                    subheader={<StyledListSubheader> USER</StyledListSubheader>}
+                >
+                    <StyledListItem disablePadding>
+                        <StyledListItemButton>
+                            <ListItemIcon>
+                                <GridViewOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <StyledListItemText primary="Manage User" />
+                        </StyledListItemButton>
+                    </StyledListItem>
+                    <StyledListItem disablePadding>
+                        <StyledListItemButton>
+                            <ListItemIcon>
+                                <GridViewOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <StyledListItemText primary="Ubah Profil" />
+                        </StyledListItemButton>
+                    </StyledListItem>
+                    <StyledListItem disablePadding>
+                        <StyledListItemButton>
+                            <ListItemIcon>
+                                <GridViewOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <StyledListItemText primary="Logout" />
                         </StyledListItemButton>
                     </StyledListItem>
                 </List>

@@ -21,14 +21,17 @@ export const useMasterIuran = () => {
                             size="small"
                             fullWidth
                             onClick={() => {
-                                findData(value.row.original.id, ({ id, iuranName, requireCollector }) => {
-                                    setId(id);
-                                    setFormValue({
-                                        iuranName,
-                                        requireCollector,
-                                    });
-                                    setIsFormOpen(true);
-                                });
+                                findData(
+                                    value.row.original.id,
+                                    ({ id, iuranName, requireCollector }) => {
+                                        setId(id);
+                                        setFormValue({
+                                            iuranName,
+                                            requireCollector,
+                                        });
+                                        setIsFormOpen(true);
+                                    }
+                                );
                             }}
                         >
                             Edit
@@ -37,7 +40,14 @@ export const useMasterIuran = () => {
                 },
             },
             { header: 'Nama Iuran', accessorKey: 'iuranName' },
-            { header: 'Butuh Kolektor', accessorKey: 'requireCollector', cell: (value) => (value.row.original.requireCollector === 1 ? 'Butuh kolektor' : 'Tidak butuh kolektor') },
+            {
+                header: 'Butuh Kolektor',
+                accessorKey: 'requireCollector',
+                cell: (value) =>
+                    value.row.original.requireCollector === 1
+                        ? 'Butuh kolektor'
+                        : 'Tidak butuh kolektor',
+            },
         ],
         []
     );
@@ -61,7 +71,9 @@ export const useMasterIuran = () => {
                     { value: 0, label: 'Tidak butuh kolektor' },
                 ],
                 optionsFieldType: 'radio',
-                validationSchema: Yup.string().required('Harap pilih salah satu'),
+                validationSchema: Yup.string().required(
+                    'Harap pilih salah satu'
+                ),
             },
         ];
     }, []);

@@ -1,7 +1,13 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class Penduduk extends Model {}
+    class Penduduk extends Model {
+        static associate(models) {
+            this.hasMany(models.NilaiIuranPenduduk, {
+                foreignKey: 'pendudukId',
+            });
+        }
+    }
     Penduduk.init(
         {
             id: {

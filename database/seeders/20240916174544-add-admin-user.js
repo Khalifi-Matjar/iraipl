@@ -14,8 +14,15 @@ module.exports = {
          *   isBetaMember: false
          * }], {});
          */
-        const password = crypto.createHash('sha256').update('12345').digest('hex');
-        await queryInterface.bulkDelete('tbl-user', { email: 'devadmin@app' }, {});
+        const password = crypto
+            .createHash('sha256')
+            .update('12345')
+            .digest('hex');
+        await queryInterface.bulkDelete(
+            'tbl-user',
+            { email: 'devadmin@app' },
+            {}
+        );
         await queryInterface.bulkInsert('tbl-user', [
             {
                 name: 'development admin',
@@ -35,6 +42,10 @@ module.exports = {
          * Example:
          * await queryInterface.bulkDelete('People', null, {});
          */
-        await queryInterface.bulkDelete('tbl-user', { email: 'devadmin@app' }, {});
+        await queryInterface.bulkDelete(
+            'tbl-user',
+            { email: 'devadmin@app' },
+            {}
+        );
     },
 };

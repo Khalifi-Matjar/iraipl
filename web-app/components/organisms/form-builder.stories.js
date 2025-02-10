@@ -73,15 +73,41 @@ export const Default = {
 export const CompleteFormInteraction = {
     args: {
         formDefinitions: [
-            { name: 'first-name', id: 'first-name', label: 'First name', gridColumn: 6, validationSchema: Yup.string().required('First name is required') },
-            { name: 'last-name', id: 'last-name', label: 'Last name', gridColumn: 6, validationSchema: Yup.string().required('Last name is required') },
-            { name: 'university', id: 'university', label: 'University', gridColumn: 4, validationSchema: Yup.string().required('At least you were in university tho?') },
+            {
+                name: 'first-name',
+                id: 'first-name',
+                label: 'First name',
+                gridColumn: 6,
+                validationSchema: Yup.string().required(
+                    'First name is required'
+                ),
+            },
+            {
+                name: 'last-name',
+                id: 'last-name',
+                label: 'Last name',
+                gridColumn: 6,
+                validationSchema: Yup.string().required(
+                    'Last name is required'
+                ),
+            },
+            {
+                name: 'university',
+                id: 'university',
+                label: 'University',
+                gridColumn: 4,
+                validationSchema: Yup.string().required(
+                    'At least you were in university tho?'
+                ),
+            },
             {
                 name: 'year-grad',
                 id: 'year-grad',
                 label: 'Year of graduation',
                 gridColumn: 4,
-                validationSchema: Yup.number().required('And you supposed to be graduated'),
+                validationSchema: Yup.number().required(
+                    'And you supposed to be graduated'
+                ),
             },
             {
                 name: 'month',
@@ -89,7 +115,9 @@ export const CompleteFormInteraction = {
                 label: 'Birth month',
                 options: birthMonth,
                 gridColumn: 4,
-                validationSchema: Yup.number().required('Are you never been borned?'),
+                validationSchema: Yup.number().required(
+                    'Are you never been borned?'
+                ),
             },
         ],
         submitDefinition: {

@@ -1,4 +1,12 @@
-import { Avatar, Box, Chip, Paper, Stack, styled, Typography } from '@mui/material';
+import {
+    Avatar,
+    Box,
+    Chip,
+    Paper,
+    Stack,
+    styled,
+    Typography,
+} from '@mui/material';
 import axios from 'axios';
 import React, { useEffect } from 'react';
 
@@ -37,7 +45,12 @@ const StyledPaper = styled(Paper)(() => ({
 export const Welcome = () => {
     useEffect(() => {
         // attempt to fetch welcome API to see if the absolute path works well
-        axios.get('/api/welcome').then((welcome) => void console.log('welcome API fetch testing', welcome.data));
+        axios
+            .get('/api/welcome')
+            .then(
+                (welcome) =>
+                    void console.log('welcome API fetch testing', welcome.data)
+            );
     }, []);
 
     return (
@@ -45,12 +58,21 @@ export const Welcome = () => {
             <StyledPaper>
                 <Typography variant="h2">IRA Pengelolaan v1</Typography>
                 <Typography variant="h4">by: Khalifi Matjar</Typography>
-                <Typography variant="h5">A progressive web based application built to manage and monitor flows of environment and neighborhood maintenance bill is better</Typography>
+                <Typography variant="h5">
+                    A progressive web based application built to manage and
+                    monitor flows of environment and neighborhood maintenance
+                    bill is better
+                </Typography>
                 <br />
                 <Stack direction="row" spacing={1}>
                     <Typography variant="h6">Tech stacks:</Typography>
                     {techStacks.map(({ avatar, label }) => (
-                        <Chip key={label} avatar={<Avatar alt={label} src={avatar} />} label={label} variant="outlined" />
+                        <Chip
+                            key={label}
+                            avatar={<Avatar alt={label} src={avatar} />}
+                            label={label}
+                            variant="outlined"
+                        />
                     ))}
                 </Stack>
             </StyledPaper>

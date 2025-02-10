@@ -1,4 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -7,7 +14,16 @@ import noop from 'lodash/noop';
 import { FormBuilder } from '../../organisms/form-builder';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
 
-export const PendudukFormDialog = ({ isOpen, pendudukFormDef, pendudukFormValue, onSubmit, onDelete, onClose, pendudukId }) => {
+export const PendudukFormDialog = ({
+    isOpen,
+    pendudukFormDef,
+    pendudukFormValue,
+    onSubmit,
+    onDelete,
+    onClose,
+    pendudukId,
+    formIuranComp,
+}) => {
     const [confirmModalProps, setConfirmModalProps] = useState({
         open: false,
         title: '',
@@ -19,7 +35,9 @@ export const PendudukFormDialog = ({ isOpen, pendudukFormDef, pendudukFormValue,
     return (
         <>
             <Dialog open={isOpen} fullWidth maxWidth="md">
-                <DialogTitle>{isNull(pendudukId) ? 'Tambah' : 'Ubah'} Data Penduduk</DialogTitle>
+                <DialogTitle>
+                    {isNull(pendudukId) ? 'Tambah' : 'Ubah'} Data Penduduk
+                </DialogTitle>
                 <IconButton
                     aria-label="close"
                     sx={{
@@ -42,7 +60,8 @@ export const PendudukFormDialog = ({ isOpen, pendudukFormDef, pendudukFormValue,
                                 setConfirmModalProps({
                                     open: true,
                                     title: 'Data penduduk',
-                                    message: 'Anda yakin akan menyimpan data penduduk ini',
+                                    message:
+                                        'Anda yakin akan menyimpan data penduduk ini',
                                     onConfirmYesAction: () => {
                                         onSubmit(value);
                                         setConfirmModalProps({
@@ -67,41 +86,47 @@ export const PendudukFormDialog = ({ isOpen, pendudukFormDef, pendudukFormValue,
                     />
                 </DialogContent>
                 {!isNull(pendudukId) && (
-                    <DialogActions>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            size="small"
-                            color="warning"
-                            onClick={() => {
-                                setConfirmModalProps({
-                                    open: true,
-                                    title: 'Hapus Data penduduk',
-                                    message: 'Anda yakin akan menghapus data penduduk ini',
-                                    onConfirmYesAction: () => {
-                                        onDelete();
-                                        setConfirmModalProps({
-                                            open: false,
-                                            title: '',
-                                            message: '',
-                                            onConfirmYesAction: noop,
-                                            onConfirmNoAction: noop,
-                                        });
-                                    },
-                                    onConfirmNoAction: () =>
-                                        void setConfirmModalProps({
-                                            open: false,
-                                            title: '',
-                                            message: '',
-                                            onConfirmYesAction: noop,
-                                            onConfirmNoAction: noop,
-                                        }),
-                                });
-                            }}
-                        >
-                            Hapus data penduduk
-                        </Button>
-                    </DialogActions>
+                    <>
+                        {/* Component to manage retribution history */}
+                        {formIuranComp}
+
+                        <DialogActions>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                size="small"
+                                color="warning"
+                                onClick={() => {
+                                    setConfirmModalProps({
+                                        open: true,
+                                        title: 'Hapus Data penduduk',
+                                        message:
+                                            'Anda yakin akan menghapus data penduduk ini',
+                                        onConfirmYesAction: () => {
+                                            onDelete();
+                                            setConfirmModalProps({
+                                                open: false,
+                                                title: '',
+                                                message: '',
+                                                onConfirmYesAction: noop,
+                                                onConfirmNoAction: noop,
+                                            });
+                                        },
+                                        onConfirmNoAction: () =>
+                                            void setConfirmModalProps({
+                                                open: false,
+                                                title: '',
+                                                message: '',
+                                                onConfirmYesAction: noop,
+                                                onConfirmNoAction: noop,
+                                            }),
+                                    });
+                                }}
+                            >
+                                Hapus data penduduk
+                            </Button>
+                        </DialogActions>
+                    </>
                 )}
             </Dialog>
             <ConfirmationModal {...confirmModalProps} />
@@ -117,4 +142,5 @@ PendudukFormDialog.propTypes = {
     onSubmit: PropTypes.func,
     onDelete: PropTypes.func,
     onClose: PropTypes.func,
+    formIuranComp: PropTypes.node,
 };

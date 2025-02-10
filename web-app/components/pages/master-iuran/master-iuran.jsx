@@ -7,7 +7,18 @@ import { MasterIuranFormDialog } from './master-iuran-form-dialog';
 import { deleteData, listData, mutateData } from './master-iuran-functions';
 
 export const MasterIuran = () => {
-    const { tblColDef, tblRows, setTblRows, setFormValue, setId, isFormOpen, setIsFormOpen, formDef, formValue, id } = useMasterIuran();
+    const {
+        tblColDef,
+        tblRows,
+        setTblRows,
+        setFormValue,
+        setId,
+        isFormOpen,
+        setIsFormOpen,
+        formDef,
+        formValue,
+        id,
+    } = useMasterIuran();
 
     return (
         <MasterPage>
@@ -22,7 +33,11 @@ export const MasterIuran = () => {
                 Tambah Data Iuran
             </Button>
             <br />
-            <LocalTable columns={tblColDef} data={tblRows} title="Jenis-Jenis Iuran" />
+            <LocalTable
+                columns={tblColDef}
+                data={tblRows}
+                title="Jenis-Jenis Iuran"
+            />
             <MasterIuranFormDialog
                 isOpen={isFormOpen}
                 formDef={formDef}

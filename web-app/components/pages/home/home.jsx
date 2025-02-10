@@ -25,7 +25,9 @@ export const Home = () => {
             <StyledPaper>
                 <Typography variant="h2">IRA Pengelolaan v1</Typography>
                 <Typography variant="h4">by: Khalifi Matjar</Typography>
-                <Typography variant="h5">Assalamualaikum, welcome to home of this application</Typography>
+                <Typography variant="h5">
+                    Assalamualaikum, welcome to home of this application
+                </Typography>
                 <TextLink component={RouterLink} to="/welcome">
                     To welcome page
                 </TextLink>

@@ -10,7 +10,9 @@ router.get('/find', async function (req, res, _next) {
     let httpResponse;
 
     if (!!findUser) {
-        const iuran = !!req.query.id ? await db.MasterIuran.findByPk(req.query.id) : await db.MasterIuran.findAll();
+        const iuran = !!req.query.id
+            ? await db.MasterIuran.findByPk(req.query.id)
+            : await db.MasterIuran.findAll();
         httpResponseCode = 200;
         httpResponse = {
             success: true,

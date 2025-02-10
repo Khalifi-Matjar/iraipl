@@ -4,10 +4,27 @@ import { LocalTable } from '../../organisms/local-table';
 import { MasterPage } from '../master-page';
 import { useKolektor } from './kolektor-hooks';
 import { KolektorFormDialog } from './kolektor-form-dialog';
-import { deleteData, listData, mutateData, resetPassword } from './kolektor-functions';
+import {
+    deleteData,
+    listData,
+    mutateData,
+    resetPassword,
+} from './kolektor-functions';
 
 export const Kolektor = () => {
-    const { tblColDef, tblRows, setTblRows, setFormValue, setId, isFormOpen, setIsFormOpen, formDef, formValue, id, updatePasswordFormDef } = useKolektor();
+    const {
+        tblColDef,
+        tblRows,
+        setTblRows,
+        setFormValue,
+        setId,
+        isFormOpen,
+        setIsFormOpen,
+        formDef,
+        formValue,
+        id,
+        updatePasswordFormDef,
+    } = useKolektor();
 
     return (
         <MasterPage>
@@ -22,7 +39,11 @@ export const Kolektor = () => {
                 Tambah Data Kolektor
             </Button>
             <br />
-            <LocalTable columns={tblColDef} data={tblRows} title="Daftar Kolektor" />
+            <LocalTable
+                columns={tblColDef}
+                data={tblRows}
+                title="Daftar Kolektor"
+            />
             <KolektorFormDialog
                 isOpen={isFormOpen}
                 formDef={formDef}

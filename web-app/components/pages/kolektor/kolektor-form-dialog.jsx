@@ -1,4 +1,12 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -7,7 +15,17 @@ import noop from 'lodash/noop';
 import { FormBuilder } from '../../organisms/form-builder';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
 
-export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDelete, onClose, id, updatePasswordFormDef, onResetPassword }) => {
+export const KolektorFormDialog = ({
+    isOpen,
+    formDef,
+    formValue,
+    onSubmit,
+    onDelete,
+    onClose,
+    id,
+    updatePasswordFormDef,
+    onResetPassword,
+}) => {
     const [confirmModalProps, setConfirmModalProps] = useState({
         open: false,
         title: '',
@@ -19,7 +37,9 @@ export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDel
     return (
         <>
             <Dialog open={isOpen} fullWidth maxWidth="md">
-                <DialogTitle>{isNull(id) ? 'Tambah' : 'Ubah'} Data Kolektor</DialogTitle>
+                <DialogTitle>
+                    {isNull(id) ? 'Tambah' : 'Ubah'} Data Kolektor
+                </DialogTitle>
                 <IconButton
                     aria-label="close"
                     sx={{
@@ -36,7 +56,9 @@ export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDel
                     {!isNull(id) && (
                         <>
                             <DialogContentText>
-                                Jika kolektor sudah terdaftar pada data user, maka tindakan ini akan ikut mengubah email yang digunakan untuk <i>Login</i> kedalam aplikasi
+                                Jika kolektor sudah terdaftar pada data user,
+                                maka tindakan ini akan ikut mengubah email yang
+                                digunakan untuk <i>Login</i> kedalam aplikasi
                             </DialogContentText>
                             <br />
                         </>
@@ -50,7 +72,8 @@ export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDel
                                 setConfirmModalProps({
                                     open: true,
                                     title: 'Data kolektor',
-                                    message: 'Anda yakin akan menyimpan data kolektor ini',
+                                    message:
+                                        'Anda yakin akan menyimpan data kolektor ini',
                                     onConfirmYesAction: () => {
                                         onSubmit(value);
                                         setConfirmModalProps({
@@ -76,11 +99,16 @@ export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDel
                 </DialogContent>
                 {!isNull(id) && (
                     <>
-                        <DialogTitle>Atur Password Untuk Pengguna Kolektor</DialogTitle>
+                        <DialogTitle>
+                            Atur Password Untuk Pengguna Kolektor
+                        </DialogTitle>
                         <DialogContent dividers>
                             <DialogContentText>
-                                Jika kolektor sudah terdaftar pada data user, maka tindakan ini akan mengubah password yang ada, tetapi jika belum terdaftar, maka tindakan ini akan membuat data user
-                                untuk kolektor yang bersangkutan.
+                                Jika kolektor sudah terdaftar pada data user,
+                                maka tindakan ini akan mengubah password yang
+                                ada, tetapi jika belum terdaftar, maka tindakan
+                                ini akan membuat data user untuk kolektor yang
+                                bersangkutan.
                             </DialogContentText>
                             <br />
                             <FormBuilder
@@ -92,7 +120,8 @@ export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDel
                                         setConfirmModalProps({
                                             open: true,
                                             title: 'Reset Password kolektor',
-                                            message: 'Anda yakin akan me-reset password kolektor ini',
+                                            message:
+                                                'Anda yakin akan me-reset password kolektor ini',
                                             onConfirmYesAction: () => {
                                                 onResetPassword(value);
                                                 setConfirmModalProps({
@@ -126,7 +155,8 @@ export const KolektorFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDel
                                     setConfirmModalProps({
                                         open: true,
                                         title: 'Hapus Data kolektor',
-                                        message: 'Anda yakin akan menghapus data kolektor ini',
+                                        message:
+                                            'Anda yakin akan menghapus data kolektor ini',
                                         onConfirmYesAction: () => {
                                             onDelete();
                                             setConfirmModalProps({

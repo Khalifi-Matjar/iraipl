@@ -1,4 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -7,7 +14,15 @@ import noop from 'lodash/noop';
 import { FormBuilder } from '../../organisms/form-builder';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
 
-export const MasterIuranFormDialog = ({ isOpen, formDef, formValue, onSubmit, onDelete, onClose, id }) => {
+export const MasterIuranFormDialog = ({
+    isOpen,
+    formDef,
+    formValue,
+    onSubmit,
+    onDelete,
+    onClose,
+    id,
+}) => {
     const [confirmModalProps, setConfirmModalProps] = useState({
         open: false,
         title: '',
@@ -19,7 +34,9 @@ export const MasterIuranFormDialog = ({ isOpen, formDef, formValue, onSubmit, on
     return (
         <>
             <Dialog open={isOpen} fullWidth maxWidth="md">
-                <DialogTitle>{isNull(id) ? 'Tambah' : 'Ubah'} Data Jenis Iuran</DialogTitle>
+                <DialogTitle>
+                    {isNull(id) ? 'Tambah' : 'Ubah'} Data Jenis Iuran
+                </DialogTitle>
                 <IconButton
                     aria-label="close"
                     sx={{
@@ -42,7 +59,8 @@ export const MasterIuranFormDialog = ({ isOpen, formDef, formValue, onSubmit, on
                                 setConfirmModalProps({
                                     open: true,
                                     title: 'Data Jenis Iuran',
-                                    message: 'Anda yakin akan menyimpan data jenis iuran ini',
+                                    message:
+                                        'Anda yakin akan menyimpan data jenis iuran ini',
                                     onConfirmYesAction: () => {
                                         onSubmit(value);
                                         setConfirmModalProps({
@@ -77,7 +95,8 @@ export const MasterIuranFormDialog = ({ isOpen, formDef, formValue, onSubmit, on
                                 setConfirmModalProps({
                                     open: true,
                                     title: 'Hapus Data jenis iuran',
-                                    message: 'Anda yakin akan menghapus data jenis iuran ini',
+                                    message:
+                                        'Anda yakin akan menghapus data jenis iuran ini',
                                     onConfirmYesAction: () => {
                                         onDelete();
                                         setConfirmModalProps({

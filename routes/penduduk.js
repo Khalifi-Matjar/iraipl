@@ -12,7 +12,21 @@ router.get('/find', async function (req, res, _next) {
     if (!!findUser) {
         try {
             const id = req.query.id;
-            const penduduk = isUndefined(id) ? await db.Penduduk.findAll() : await db.Penduduk.findByPk(id);
+            const penduduk = isUndefined(id)
+                ? await db.Penduduk.findAll()
+                : await db.Penduduk.findByPk(id, {
+                      include: [
+                          {
+                              model: db.NilaiIuranPenduduk,
+                              include: [
+                                  {
+                                      model: db.MasterIuran,
+                                  },
+                              ],
+                          },
+                      ],
+                      order: [[db.NilaiIuranPenduduk, 'startDate', 'DESC']],
+                  });
 
             httpResponseCode = 200;
             httpResponse = {
@@ -186,6 +200,129 @@ router.delete('/delete', async function (req, res, _next) {
                     metadata: {
                         error,
                         id,
+                    },
+                };
+            }
+        }
+    } else {
+        httpResponseCode = 401;
+        httpResponse = {
+            success: false,
+            message: 'Unauthorized user',
+        };
+    }
+
+    res.status(httpResponseCode);
+    res.json(httpResponse);
+    res.end();
+});
+
+router.post('/push-retribution', async function (req, res, _next) {
+    const findUser = await authorizeApi(req);
+    let httpResponseCode;
+    let httpResponse;
+
+    if (!!findUser) {
+        const id = req.query.id;
+        const { startDate, amount, iuranId } = req.body;
+
+        try {
+            const penduduk = await db.Penduduk.findByPk(id);
+            if (penduduk) {
+                await db.NilaiIuranPenduduk.create({
+                    startDate,
+                    amount,
+                    iuranId,
+                    pendudukId: id,
+                });
+
+                httpResponseCode = 200;
+                httpResponse = {
+                    success: true,
+                    message: 'Retribution has been pushed successfully',
+                    metadata: {
+                        findUser,
+                        id,
+                        body: req.body,
+                    },
+                };
+            } else {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: `Could not found penduduk with id = ${id}`,
+                    metadata: {
+                        error,
+                        id,
+                        body: req.body,
+                    },
+                };
+            }
+        } catch (error) {
+            if (error) {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: error.message,
+                    metadata: {
+                        error,
+                        id,
+                        body: req.body,
+                    },
+                };
+            }
+        }
+    } else {
+        httpResponseCode = 401;
+        httpResponse = {
+            success: false,
+            message: 'Unauthorized user',
+        };
+    }
+
+    res.status(httpResponseCode);
+    res.json(httpResponse);
+    res.end();
+});
+
+router.delete('/delete-retribution', async function (req, res, _next) {
+    const findUser = await authorizeApi(req);
+    let httpResponseCode;
+    let httpResponse;
+
+    if (!!findUser) {
+        try {
+            const retributionId = req.query.id;
+            const retribution =
+                await db.NilaiIuranPenduduk.findByPk(retributionId);
+            if (retribution) {
+                await retribution.destroy();
+                httpResponseCode = 200;
+                httpResponse = {
+                    success: true,
+                    message: 'Nilai iuran has been deleted successfully',
+                    metadata: {
+                        retributionId,
+                    },
+                };
+            } else {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: `Could not found nilai iuran with id = ${id}`,
+                    metadata: {
+                        retributionId,
+                    },
+                };
+            }
+        } catch (error) {
+            if (error) {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: error.message,
+                    metadata: {
+                        error,
                     },
                 };
             }
