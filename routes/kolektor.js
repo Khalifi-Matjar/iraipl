@@ -15,7 +15,10 @@ router.get('/find', async function (req, res, _next) {
         try {
             const id = req.query.id;
             const kolektor = isUndefined(id)
-                ? await db.Kolektor.findAll({ include: db.User })
+                ? await db.Kolektor.findAll({
+                      include: db.User,
+                      order: [['name', 'ASC']],
+                  })
                 : await db.Kolektor.findByPk(id, { include: db.User });
 
             httpResponseCode = 200;

@@ -40,6 +40,10 @@ export const routesDefinitions = [
         element: <Kolektor />,
     },
     {
+        path: '/penerimaan-iuran-kolektor',
+        element: <PenerimaanIuran />,
+    },
+    {
         path: '/penerimaan-iuran-non-kolektor',
         element: <PenerimaanIuran />,
     },

@@ -2,6 +2,7 @@ var express = require('express');
 const isUndefined = require('lodash/isUndefined');
 const { authorizeApi } = require('../utils/authorize-route');
 const db = require('../database/models');
+const { Op } = require('sequelize');
 var router = express.Router();
 
 router.get('/find', async function (req, res, _next) {
@@ -12,8 +13,43 @@ router.get('/find', async function (req, res, _next) {
     if (!!findUser) {
         try {
             const id = req.query.id;
+            const { address, pic, contact, email, isActive } = req.query;
             const penduduk = isUndefined(id)
-                ? await db.Penduduk.findAll()
+                ? await db.Penduduk.findAll({
+                      include: [
+                          {
+                              model: db.NilaiIuranPenduduk,
+                              include: [
+                                  {
+                                      model: db.MasterIuran,
+                                  },
+                              ],
+                          },
+                      ],
+                      where: {
+                          [Op.and]: [
+                              {
+                                  address: { [Op.like]: `%${address ?? ''}%` },
+                              },
+                              {
+                                  pic: { [Op.like]: `%${pic ?? ''}%` },
+                              },
+                              {
+                                  contact: { [Op.like]: `%${contact ?? ''}%` },
+                              },
+                              {
+                                  email: { [Op.like]: `%${email ?? ''}%` },
+                              },
+                              isActive && {
+                                  isActive,
+                              },
+                          ],
+                      },
+                      order: [
+                          ['address', 'ASC'],
+                          ['pic', 'ASC'],
+                      ],
+                  })
                 : await db.Penduduk.findByPk(id, {
                       include: [
                           {

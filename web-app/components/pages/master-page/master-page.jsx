@@ -8,7 +8,7 @@ const StyledBox = styled(Box)(() => ({
     height: '100dvh',
     display: 'flex',
     justifyContent: 'flex-start',
-    overflow: 'hidden',
+    overflowX: 'hidden',
 }));
 const StyledMain = styled(Box)(() => ({
     display: 'flex',
@@ -16,6 +16,8 @@ const StyledMain = styled(Box)(() => ({
     alignItems: 'flex-start',
     width: '100%',
     padding: '20px',
+    height: '100dvh',
+    overflow: 'auto',
 }));
 
 export const MasterPage = ({ children }) => {
