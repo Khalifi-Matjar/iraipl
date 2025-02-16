@@ -113,8 +113,6 @@ export const FormBuilder = ({
         });
     }, [valueDefinitions]);
 
-    // console.log('valll', formik.values, valueDefinitions);
-
     return (
         <form action="" method="post" onSubmit={formik.handleSubmit}>
             <Grid container spacing={2}>
@@ -124,6 +122,7 @@ export const FormBuilder = ({
                             label,
                             helperText,
                             gridColumn,
+                            gridColumnSmall,
                             options,
                             optionsFieldType = 'comboBox',
                             ...formAttributes
@@ -133,7 +132,8 @@ export const FormBuilder = ({
                         return (
                             <Grid
                                 item
-                                xs={gridColumn}
+                                md={gridColumn}
+                                xs={gridColumnSmall ?? 12}
                                 key={`form-grid-${index}`}
                             >
                                 <InputBox
@@ -161,7 +161,11 @@ export const FormBuilder = ({
                 <Grid item xs={12}>
                     {!!submitDefinition && (
                         <Stack direction="row" spacing={2}>
-                            <Button variant="contained" type="submit">
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                fullWidth={submitDefinition.isFullWidthButton}
+                            >
                                 {submitDefinition?.label ?? 'Submit'}
                             </Button>
                         </Stack>
@@ -200,6 +204,7 @@ FormBuilder.propTypes = {
             ]),
             helperText: PropTypes.string,
             gridColumn: PropTypes.number,
+            gridColumnSmall: PropTypes.number,
             options: PropTypes.arrayOf(
                 PropTypes.exact({
                     value: PropTypes.oneOfType([
@@ -223,6 +228,7 @@ FormBuilder.propTypes = {
     ),
     submitDefinition: PropTypes.shape({
         label: PropTypes.string,
+        isFullWidthButton: PropTypes.bool,
         onSubmit: PropTypes.func,
     }),
     valueDefinitions: PropTypes.object,

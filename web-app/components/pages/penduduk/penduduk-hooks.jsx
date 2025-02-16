@@ -4,16 +4,18 @@ import {
     deleteRetribution,
     findPenduduk,
     listPenduduk,
+    listPerumahan,
 } from './penduduk-functions';
 import { Button } from '@mui/material';
 import { formatDate, formatMoney } from '../../../utils';
 import { listData as listIuranData } from '../master-iuran/master-iuran-functions';
 
-export const usePenduduk = () => {
+export const usePenduduk = (activeOnly = false) => {
     const [pendudukId, setPendudukId] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [formValue, setFormValue] = useState({});
     const [pendudukTblRows, setPendudukTblRows] = useState([]);
+    const [perumahan, setPerumahan] = useState([]);
     const [jenisIuran, setJenisIuran] = useState([]);
     const [retributionList, setRetributionList] = useState([]);
     const [formIuranFormValue, setFormIuranFormValue] = useState({});
@@ -35,6 +37,7 @@ export const usePenduduk = () => {
                                     ({
                                         id,
                                         address,
+                                        perumahanId,
                                         pic,
                                         contact,
                                         email,
@@ -44,6 +47,7 @@ export const usePenduduk = () => {
                                         setPendudukId(id);
                                         setFormValue({
                                             address,
+                                            perumahanId,
                                             pic,
                                             contact,
                                             email,
@@ -61,6 +65,7 @@ export const usePenduduk = () => {
                     );
                 },
             },
+            { header: 'Perumahan', accessorKey: 'Perumahan.perumahan' },
             { header: 'Alamat', accessorKey: 'address' },
             { header: 'PIC', accessorKey: 'pic' },
             { header: 'Kontak / WA', accessorKey: 'contact' },
@@ -81,6 +86,17 @@ export const usePenduduk = () => {
                 validationSchema: Yup.string().required(
                     'Berikan alamat lengkap'
                 ),
+            },
+            {
+                name: 'perumahanId',
+                id: 'perumahanId',
+                label: 'Perumahan',
+                gridColumn: 12,
+                options: perumahan.map(({ id, perumahan }) => ({
+                    value: id,
+                    label: perumahan,
+                })),
+                validationSchema: Yup.string().required('Pilih perumahan'),
             },
             {
                 name: 'pic',
@@ -121,7 +137,7 @@ export const usePenduduk = () => {
                 ),
             },
         ];
-    }, []);
+    }, [perumahan]);
 
     const formIuranFormDef = useMemo(
         () => [
@@ -223,14 +239,29 @@ export const usePenduduk = () => {
         [retributionList]
     );
 
+    const filterPenduduk = (filter) => {
+        listPenduduk((penduduk) => void setPendudukTblRows(penduduk), {
+            isActive: true,
+            ...filter,
+        });
+    };
+
     useEffect(() => {
         // Get list all penduduk
-        listPenduduk((penduduk) => {
-            setPendudukTblRows(penduduk);
-        });
+        listPenduduk(
+            (penduduk) => {
+                setPendudukTblRows(penduduk);
 
-        // Get list all iuran / retribution
-        listIuranData((iuran) => setJenisIuran(iuran));
+                // Get list all iuran / retribution
+                listIuranData((iuran) => {
+                    setJenisIuran(iuran);
+
+                    // Get list all perumahan
+                    listPerumahan((perumahan) => setPerumahan(perumahan));
+                });
+            },
+            activeOnly ? { isActive: true } : undefined
+        );
     }, []);
 
     return {
@@ -250,5 +281,8 @@ export const usePenduduk = () => {
         setFormIuranFormValue,
         formIuranTblColDef,
         formIuranTblData,
+        perumahan,
+        jenisIuran,
+        filterPenduduk,
     };
 };

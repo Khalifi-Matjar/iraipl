@@ -3,6 +3,7 @@ import {
     Dashboard,
     Home,
     Kolektor,
+    KolektorsPortal,
     Login,
     MasterIuran,
     Penduduk,
@@ -46,5 +47,9 @@ export const routesDefinitions = [
     {
         path: '/penerimaan-iuran-non-kolektor',
         element: <PenerimaanIuran />,
+    },
+    {
+        path: '/kolektors-portal',
+        element: <KolektorsPortal />,
     },
 ];

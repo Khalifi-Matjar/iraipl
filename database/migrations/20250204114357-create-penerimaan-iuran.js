@@ -19,7 +19,7 @@ module.exports = {
             },
             iuranId: {
                 allowNull: false,
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 references: {
                     model: {
                         tableName: 'tbl-master-iuran',
@@ -31,7 +31,7 @@ module.exports = {
                 onDelete: 'CASCADE',
             },
             pendudukId: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING,
                 references: {
                     model: {
@@ -44,7 +44,7 @@ module.exports = {
                 onDelete: 'CASCADE',
             },
             kolektorId: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING,
                 references: {
                     model: {
@@ -55,6 +55,18 @@ module.exports = {
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
+            },
+            periodMonth: {
+                allowNull: false,
+                type: Sequelize.SMALLINT,
+            },
+            periodYear: {
+                allowNull: false,
+                type: Sequelize.SMALLINT,
+            },
+            summary: {
+                allowNull: true,
+                type: Sequelize.STRING,
             },
             createdAt: {
                 allowNull: false,

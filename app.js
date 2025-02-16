@@ -9,8 +9,10 @@ var indexRouter = require('./routes/index');
 var welcomeRouter = require('./routes/welcome');
 var authenticationRouter = require('./routes/authentication');
 var masterIuranRouter = require('./routes/master-iuran');
+var perumahanRouter = require('./routes/perumahan');
 var pendudukRouter = require('./routes/penduduk');
 var kolektorRouter = require('./routes/kolektor');
+var penerimaanIuranRouter = require('./routes/penerimaan-iuran');
 
 /** App DB works */
 var { sequelize } = require('./database/models');
@@ -60,8 +62,10 @@ app.use('/', indexRouter);
 app.use('/api/welcome', welcomeRouter);
 app.use('/api/authentication', authenticationRouter);
 app.use('/api/master-iuran', masterIuranRouter);
+app.use('/api/perumahan', perumahanRouter);
 app.use('/api/penduduk', pendudukRouter);
 app.use('/api/kolektor', kolektorRouter);
+app.use('/api/penerimaan-iuran', penerimaanIuranRouter);
 
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {

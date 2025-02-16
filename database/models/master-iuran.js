@@ -16,9 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     }
     MasterIuran.init(
         {
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true,
+                defaultValue: DataTypes.UUIDV4,
+            },
             iuranName: DataTypes.STRING,
             requireCollector: DataTypes.INTEGER,
-            userId: DataTypes.INTEGER,
+            userId: DataTypes.STRING,
         },
         {
             sequelize,

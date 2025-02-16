@@ -13,6 +13,19 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
+            perumahanId: {
+                allowNull: false,
+                type: Sequelize.STRING,
+                references: {
+                    model: {
+                        tableName: 'tbl-master-perumahan',
+                        name: 'Perumahan',
+                    },
+                    key: 'id',
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE',
+            },
             pic: {
                 allowNull: false,
                 type: Sequelize.STRING,

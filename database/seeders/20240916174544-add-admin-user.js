@@ -1,6 +1,7 @@
 'use strict';
 
 var crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -25,6 +26,7 @@ module.exports = {
         );
         await queryInterface.bulkInsert('tbl-user', [
             {
+                id: uuidv4(),
                 name: 'development admin',
                 email: 'devadmin@app',
                 password,

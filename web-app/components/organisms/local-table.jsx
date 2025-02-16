@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Box,
     Card,
-    Divider,
     IconButton,
     InputBase,
     Paper,
@@ -18,6 +20,7 @@ import {
     Typography,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     flexRender,
     getCoreRowModel,
@@ -27,12 +30,11 @@ import {
 
 const StyledCard = styled(Card)(() => ({
     width: '100%',
-    overflowX: 'hidden',
-    overflowY: 'auto',
+    overflow: 'unset',
 }));
 
 const StyledBox = styled(Box)(() => ({
-    padding: '10px 20px 20px',
+    padding: '10px 0 20px',
     position: 'sticky',
     top: 0,
     zIndex: 2,
@@ -53,6 +55,10 @@ const StyledTable = styled(Table)(() => ({
 const StyledTableCell = styled(TableCell)(() => ({
     backgroundColor: '#1976d2e0',
     color: 'white',
+}));
+
+const StyledAccordion = styled(Accordion)(() => ({
+    boxShadow: 'unset',
 }));
 
 const DefaultSearchComponent = ({ title }) => (
@@ -95,7 +101,6 @@ export const LocalTable = ({
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onPaginationChange: setPagination,
-        //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
         state: {
             pagination,
         },
@@ -109,15 +114,18 @@ export const LocalTable = ({
         <StyledCard variant="outlined">
             {hasTitle && hasSearch && (
                 <StyledBox>
-                    {hasTitle && (
-                        <Typography gutterBottom variant="h5" component="div">
-                            {title}
-                        </Typography>
-                    )}
-                    {hasSearch && searchComponent}
+                    <StyledAccordion square>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            {hasTitle && (
+                                <Typography variant="h6">{title}</Typography>
+                            )}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {hasSearch && searchComponent}
+                        </AccordionDetails>
+                    </StyledAccordion>
                 </StyledBox>
             )}
-            <Divider />
             <TableContainer>
                 <StyledTable size="small">
                     <TableHead>

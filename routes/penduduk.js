@@ -13,7 +13,8 @@ router.get('/find', async function (req, res, _next) {
     if (!!findUser) {
         try {
             const id = req.query.id;
-            const { address, pic, contact, email, isActive } = req.query;
+            const { address, perumahanId, pic, contact, email, isActive } =
+                req.query;
             const penduduk = isUndefined(id)
                 ? await db.Penduduk.findAll({
                       include: [
@@ -25,11 +26,17 @@ router.get('/find', async function (req, res, _next) {
                                   },
                               ],
                           },
+                          {
+                              model: db.Perumahan,
+                          },
                       ],
                       where: {
                           [Op.and]: [
                               {
                                   address: { [Op.like]: `%${address ?? ''}%` },
+                              },
+                              perumahanId && {
+                                  perumahanId,
                               },
                               {
                                   pic: { [Op.like]: `%${pic ?? ''}%` },
@@ -41,11 +48,13 @@ router.get('/find', async function (req, res, _next) {
                                   email: { [Op.like]: `%${email ?? ''}%` },
                               },
                               isActive && {
-                                  isActive,
+                                  isActive:
+                                      isActive.toLocaleLowerCase() === 'true',
                               },
                           ],
                       },
                       order: [
+                          [db.Perumahan, 'perumahan', 'ASC'],
                           ['address', 'ASC'],
                           ['pic', 'ASC'],
                       ],
@@ -59,6 +68,9 @@ router.get('/find', async function (req, res, _next) {
                                       model: db.MasterIuran,
                                   },
                               ],
+                          },
+                          {
+                              model: db.Perumahan,
                           },
                       ],
                       order: [[db.NilaiIuranPenduduk, 'startDate', 'DESC']],
@@ -104,11 +116,13 @@ router.post('/add', async function (req, res, _next) {
     let httpResponse;
 
     if (!!findUser) {
-        const { address, pic, contact, email, isActive } = req.body;
+        const { address, perumahanId, pic, contact, email, isActive } =
+            req.body;
 
         try {
             await db.Penduduk.create({
                 address,
+                perumahanId,
                 pic,
                 contact,
                 email,
@@ -157,12 +171,14 @@ router.post('/update', async function (req, res, _next) {
 
     if (!!findUser) {
         const id = req.query.id;
-        const { address, pic, contact, email, isActive } = req.body;
+        const { address, perumahanId, pic, contact, email, isActive } =
+            req.body;
 
         try {
             const penduduk = await db.Penduduk.findByPk(id);
             await penduduk.update({
                 address,
+                perumahanId,
                 pic,
                 contact,
                 email,

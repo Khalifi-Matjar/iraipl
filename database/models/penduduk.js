@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(models.NilaiIuranPenduduk, {
                 foreignKey: 'pendudukId',
             });
+
+            this.belongsTo(models.Perumahan, {
+                foreignKey: 'perumahanId',
+            });
         }
     }
     Penduduk.init(
@@ -16,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: DataTypes.UUIDV4,
             },
             address: DataTypes.STRING,
+            perumahanId: DataTypes.STRING,
             pic: DataTypes.STRING,
             contact: DataTypes.STRING,
             email: DataTypes.STRING,

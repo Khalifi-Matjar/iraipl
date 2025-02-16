@@ -6,3 +6,4 @@ export * from './master-iuran';
 export * from './penduduk';
 export * from './kolektor';
 export * from './penerimaan-iuran';
+export * from './kolektors-portal';

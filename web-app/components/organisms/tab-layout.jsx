@@ -1,10 +1,12 @@
 import { Box, styled, Tab, Tabs } from '@mui/material';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 
 const ChildrenContainer = styled('div')(() => ({
     width: '100%',
 }));
+
+export const TabLayoutContext = createContext();
 
 export const TabLayout = ({ tabElement }) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -14,7 +16,7 @@ export const TabLayout = ({ tabElement }) => {
     };
 
     return (
-        <>
+        <TabLayoutContext.Provider value={{ setActiveIndex }}>
             <Box
                 sx={{ width: '100%', borderBottom: 1, borderColor: 'divider' }}
             >
@@ -32,7 +34,7 @@ export const TabLayout = ({ tabElement }) => {
                     </ChildrenContainer>
                 ) : null
             )}
-        </>
+        </TabLayoutContext.Provider>
     );
 };
 

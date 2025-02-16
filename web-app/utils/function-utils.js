@@ -1,3 +1,13 @@
+import noop from 'lodash/noop';
+
+export const closeConfirmationModalObject = {
+    open: false,
+    title: '',
+    message: '',
+    onConfirmYesAction: noop,
+    onConfirmNoAction: noop,
+};
+
 export const formatMoney = (amount) =>
     amount.toLocaleString('ID', {
         style: 'currency',

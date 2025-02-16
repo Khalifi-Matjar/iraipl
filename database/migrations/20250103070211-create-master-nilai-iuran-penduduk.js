@@ -19,7 +19,7 @@ module.exports = {
             },
             iuranId: {
                 allowNull: false,
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 references: {
                     model: {
                         tableName: 'tbl-master-iuran',

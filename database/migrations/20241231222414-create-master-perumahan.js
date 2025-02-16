@@ -3,29 +3,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('tbl-master-iuran', {
+        await queryInterface.createTable('tbl-master-perumahan', {
             id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.STRING,
             },
-            iuranName: {
+            perumahan: {
+                allowNull: false,
                 type: Sequelize.STRING,
-            },
-            requireCollector: {
-                type: Sequelize.BOOLEAN,
-            },
-            userId: {
-                type: Sequelize.STRING,
-                references: {
-                    model: {
-                        tableName: 'tbl-user',
-                        name: 'User',
-                    },
-                    key: 'id',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
             },
             createdAt: {
                 allowNull: false,
@@ -39,6 +25,6 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('tbl-master-iuran');
+        await queryInterface.dropTable('tbl-master-perumahan');
     },
 };
