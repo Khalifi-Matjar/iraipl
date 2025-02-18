@@ -10,6 +10,8 @@ import {
     PenerimaanIuran,
     Welcome,
 } from '../components';
+import { PenerimaanIuranValidasi } from '../components/pages/penerimaan-iuran/penerimaan-iuran-validasi';
+import { PenerimaanIuranType } from '../components/pages/penerimaan-iuran/penerimaan-iuran-page';
 
 export const routesDefinitions = [
     {
@@ -42,11 +44,17 @@ export const routesDefinitions = [
     },
     {
         path: '/penerimaan-iuran-kolektor',
-        element: <PenerimaanIuran />,
+        element: <PenerimaanIuran type={PenerimaanIuranType.WITH_KOLEKTOR} />,
     },
     {
         path: '/penerimaan-iuran-non-kolektor',
-        element: <PenerimaanIuran />,
+        element: (
+            <PenerimaanIuran type={PenerimaanIuranType.WITHOUT_KOLEKTOR} />
+        ),
+    },
+    {
+        path: '/penerimaan-iuran-validasi',
+        element: <PenerimaanIuranValidasi />,
     },
     {
         path: '/kolektors-portal',

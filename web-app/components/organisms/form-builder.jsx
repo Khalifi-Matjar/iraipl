@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import Grid from '@mui/material/Grid';
 import {
     Button,
+    Divider,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -160,15 +161,21 @@ export const FormBuilder = ({
                 )}
                 <Grid item xs={12}>
                     {!!submitDefinition && (
-                        <Stack direction="row" spacing={2}>
-                            <Button
-                                variant="contained"
-                                type="submit"
-                                fullWidth={submitDefinition.isFullWidthButton}
-                            >
-                                {submitDefinition?.label ?? 'Submit'}
-                            </Button>
-                        </Stack>
+                        <>
+                            <Divider />
+                            <br />
+                            <Stack direction="row" spacing={2}>
+                                <Button
+                                    variant="outlined"
+                                    type="submit"
+                                    fullWidth={
+                                        submitDefinition.isFullWidthButton
+                                    }
+                                >
+                                    {submitDefinition?.label ?? 'Submit'}
+                                </Button>
+                            </Stack>
+                        </>
                     )}
                 </Grid>
             </Grid>

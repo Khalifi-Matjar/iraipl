@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var compression = require('compression');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -71,6 +72,8 @@ app.use('/api/penerimaan-iuran', penerimaanIuranRouter);
 app.use(function (_req, _res, next) {
     next(createError(404));
 });
+
+app.use(compression());
 
 // error handler
 app.use(function (err, req, res, _next) {

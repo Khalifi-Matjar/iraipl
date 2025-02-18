@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(models.Penduduk, {
                 foreignKey: 'pendudukId',
             });
+
+            this.hasOne(models.PenerimaanIuranValidasi, {
+                foreignKey: 'penerimaanId',
+            });
         }
     }
     PenerimaanIuran.init(

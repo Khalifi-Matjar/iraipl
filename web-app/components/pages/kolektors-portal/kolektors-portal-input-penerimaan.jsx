@@ -1,15 +1,29 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
+import isNull from 'lodash/isNull';
+import axios from 'axios';
 import * as Yup from 'yup';
 
 import { PendudukCard } from '../../organisms/penduduk-card';
 import { FormBuilder } from '../../organisms/form-builder';
-import { monthList } from '../../../utils/constants';
-import { dateFormat, formatDate } from '../../../utils';
+import { LOCAL_STORAGE_TOKEN_KEY, monthList } from '../../../utils/constants';
+import {
+    closeConfirmationModalObject,
+    dateFormat,
+    formatDate,
+} from '../../../utils';
 import { Button, Divider, Typography } from '@mui/material';
 import { KolektorsPortalSearchPendudukDrawer } from './kolektors-portal-search-penduduk-drawer';
+import { SnackbarContext } from '../../context/snackbar-context';
+import { ConfirmationModal } from '../../organisms/confirmation-modal';
 
 export const KolektorsPortalInputPenerimaan = () => {
-    const [choosenPenduduk] = useState(null);
+    const [confirmModalProps, setConfirmModalProps] = useState(
+        closeConfirmationModalObject
+    );
+
+    const snackbar = useContext(SnackbarContext);
+
+    const [choosenPenduduk, setChoosenPenduduk] = useState(null);
 
     const [openSearch, setOpenSearch] = useState(false);
 
@@ -71,11 +85,10 @@ export const KolektorsPortalInputPenerimaan = () => {
         [jenisIuran]
     );
 
-    const [formValueDefinition] = useState({
+    const [formValueDefinition, setFormValueDefinition] = useState({
         iuranId: '',
         amount: '',
         transactionDate: formatDate(new Date(), dateFormat.SYSTEM),
-        kolektorId: '',
         periodMonth: '',
         periodYear: '',
     });
@@ -84,7 +97,69 @@ export const KolektorsPortalInputPenerimaan = () => {
         label: 'Simpan penerimaan iuran',
         isFullWidthButton: true,
         onSubmit: (value) => {
-            console.log('submit', value);
+            setConfirmModalProps({
+                open: true,
+                title: 'Simpan data penerimaan iuran',
+                message: 'Anda yakin akan menyimpan data penerimaan iuran ini?',
+                onConfirmYesAction: () => {
+                    if (isNull(choosenPenduduk)) {
+                        snackbar.setOpen(true);
+                        snackbar.setType('error');
+                        snackbar.setMessage(
+                            'Pilih penduduk yang membayar iuran'
+                        );
+                        setConfirmModalProps(closeConfirmationModalObject);
+                    } else {
+                        axios({
+                            method: 'post',
+                            url: '/api/penerimaan-iuran/add?add_by_kolektor=true',
+                            data: {
+                                ...value,
+                                pendudukId: choosenPenduduk.id,
+                            },
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+                            },
+                        })
+                            .then(() => {
+                                snackbar.setOpen(true);
+                                snackbar.setType('success');
+                                snackbar.setMessage(
+                                    'Data penerimaan iuran telah disimpan'
+                                );
+
+                                /** clear form input and choosen penduduk */
+                                setChoosenPenduduk(null);
+                                setFormValueDefinition({
+                                    iuranId: '',
+                                    amount: '',
+                                    transactionDate: formatDate(
+                                        new Date(),
+                                        dateFormat.SYSTEM
+                                    ),
+                                    periodMonth: '',
+                                    periodYear: '',
+                                });
+                            })
+                            .catch((error) => {
+                                snackbar.setOpen(true);
+                                snackbar.setType('error');
+                                snackbar.setMessage(
+                                    `${error.message} - ${error.response.data.message}`
+                                );
+                            })
+                            .finally(
+                                () =>
+                                    /** close confirmation modal */
+                                    void setConfirmModalProps(
+                                        closeConfirmationModalObject
+                                    )
+                            );
+                    }
+                },
+                onConfirmNoAction: () =>
+                    void setConfirmModalProps(closeConfirmationModalObject),
+            });
         },
     };
 
@@ -94,10 +169,11 @@ export const KolektorsPortalInputPenerimaan = () => {
                 openSearch={openSearch}
                 setOpenSearch={setOpenSearch}
                 setJenisIuran={setJenisIuran}
+                onPendudukClick={setChoosenPenduduk}
             />
             <Button
                 color="primary"
-                variant="contained"
+                variant="outlined"
                 fullWidth
                 onClick={() => setOpenSearch(true)}
             >
@@ -118,6 +194,7 @@ export const KolektorsPortalInputPenerimaan = () => {
                 valueDefinitions={formValueDefinition}
                 submitDefinition={formSubmitDefinition}
             />
+            <ConfirmationModal {...confirmModalProps} />
         </>
     );
 };

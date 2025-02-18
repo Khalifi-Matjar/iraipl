@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import noop from 'lodash/noop';
 import {
     dateFormat,
@@ -13,8 +19,13 @@ import { PenerimaanIuranCard } from '../../organisms/penerimaan-iuran-card';
 import { listData } from './penerimaan-iuran-functions';
 import { usePenerimaanIuran } from './penerimaan-iuran-hooks';
 import axios from 'axios';
+import {
+    PenerimaanIuranPageContext,
+    PenerimaanIuranType,
+} from './penerimaan-iuran-page';
 
-export default function PenerimaanIuranList() {
+export const PenerimaanIuranList = () => {
+    const penerimaanIuranPage = useContext(PenerimaanIuranPageContext);
     const snackbar = useContext(SnackbarContext);
     const [confirmModalProps, setConfirmModalProps] = useState({
         open: false,
@@ -36,35 +47,40 @@ export default function PenerimaanIuranList() {
         penerimaanIuranSearchFormValue,
     } = usePenerimaanIuran();
 
-    const listPenerimaanIuranData = ({ from, to }) => {
-        listData({
-            range: JSON.stringify({
-                from,
-                to,
-            }),
-            withKolektor: true,
-        })
-            .then((response) => {
-                setPenerimaanIuranTblData(response.data.penerimaanIuran);
+    const listPenerimaanIuranData = useCallback(
+        ({ from, to }) => {
+            listData({
+                range: JSON.stringify({
+                    from,
+                    to,
+                }),
+                withKolektor:
+                    penerimaanIuranPage.type ===
+                    PenerimaanIuranType.WITH_KOLEKTOR,
             })
-            .catch((error) => {
-                snackbar.setOpen(true);
-                snackbar.setType('error');
-                snackbar.setMessage(
-                    `${error.message} - ${error.response.data.message}`
-                );
-            });
-    };
+                .then((response) => {
+                    setPenerimaanIuranTblData(response.data.penerimaanIuran);
+                })
+                .catch((error) => {
+                    snackbar.setOpen(true);
+                    snackbar.setType('error');
+                    snackbar.setMessage(
+                        `${error.message} - ${error.response.data.message}`
+                    );
+                });
+        },
+        [penerimaanIuranPage.type]
+    );
 
     const penerimaanIuranSearchSubmitDef = useMemo(
         () => ({
-            label: 'Cari data penerimaan iuran',
+            label: `Cari data penerimaan iuran ${penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR ? 'dengan kolektor' : 'tanpa kolektor'}`,
             onSubmit: (value) => {
                 setSearchFormValue(value);
                 listPenerimaanIuranData(value);
             },
         }),
-        []
+        [penerimaanIuranPage.type]
     );
 
     useEffect(() => {
@@ -72,14 +88,16 @@ export default function PenerimaanIuranList() {
             from: formatDate(new Date(), dateFormat.SYSTEM),
             to: formatDate(new Date(), dateFormat.SYSTEM),
         });
-    }, []);
+
+        setHighlightedPenerimaan(null);
+    }, [penerimaanIuranPage.type]);
 
     return (
         <>
             <LocalTable
                 columns={penerimaanIuranTblColDef}
                 data={penerimaanIuranTblData}
-                title="Daftar Penerimaan Iuran"
+                title={`Daftar Penerimaan Iuran ${penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR ? 'Dengan Kolektor' : 'Tanpa Kolektor'}`}
                 searchComponent={
                     <FormBuilder
                         formDefinitions={penerimaanIuranSearchFormDef}
@@ -147,4 +165,4 @@ export default function PenerimaanIuranList() {
             <ConfirmationModal {...confirmModalProps} />
         </>
     );
-}
+};

@@ -81,7 +81,7 @@ const StyledListSubheader = styled(ListSubheader)(() => ({
 }));
 
 const StyledListItem = styled(ListItem)(() => ({
-    width: '200px',
+    width: '100%',
     marginInline: '10px',
 }));
 
@@ -181,7 +181,7 @@ export const Sidebar = () => {
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText primary="Kolektor" />
+                            <StyledListItemText primary="Dengan Kolektor" />
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
@@ -192,11 +192,14 @@ export const Sidebar = () => {
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>
-                            <StyledListItemText primary="Non Kolektor" />
+                            <StyledListItemText primary="Tanpa Kolektor" />
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
-                        <StyledListItemButton>
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/penerimaan-iuran-validasi"
+                        >
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>

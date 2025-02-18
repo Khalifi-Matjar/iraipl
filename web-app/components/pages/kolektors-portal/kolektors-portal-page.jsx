@@ -5,19 +5,20 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BottomNavLayout from '../../organisms/bottom-nav-layout';
 import { KolektorsPortalInputPenerimaan } from './kolektors-portal-input-penerimaan';
+import { KolektorsPortalListPenerimaan } from './kolektors-portal-list-penerimaan';
 
 export const KolektorsPortal = () => {
     const bottomNavDefinitions = useMemo(
         () => [
             {
+                menuLabel: 'List',
+                menuIcon: <FormatListNumberedIcon />,
+                children: <KolektorsPortalListPenerimaan />,
+            },
+            {
                 menuLabel: 'Input',
                 menuIcon: <FileOpenIcon />,
                 children: <KolektorsPortalInputPenerimaan />,
-            },
-            {
-                menuLabel: 'List',
-                menuIcon: <FormatListNumberedIcon />,
-                children: <div>List data</div>,
             },
             {
                 menuLabel: 'Profil',

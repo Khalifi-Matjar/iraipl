@@ -13,7 +13,7 @@ export const ConfirmationModal = ({
     open,
     title,
     message,
-    onConfirmYesAction,
+    onConfirmYesAction = () => {},
     onConfirmNoAction = () => {},
 }) => {
     return (
@@ -23,10 +23,13 @@ export const ConfirmationModal = ({
                 <DialogContentText>{message}</DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" onClick={onConfirmNoAction}>
+                <Button variant="outlined" onClick={() => onConfirmNoAction()}>
                     No
                 </Button>
-                <Button variant="contained" onClick={onConfirmYesAction}>
+                <Button
+                    variant="contained"
+                    onClick={() => onConfirmYesAction()}
+                >
                     Yes
                 </Button>
             </DialogActions>

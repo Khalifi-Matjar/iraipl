@@ -1,9 +1,15 @@
 import noop from 'lodash/noop';
 
+export const getInitialName = (name) =>
+    name
+        .split(' ')
+        .map((x) => x.charAt(0))
+        .join('')
+        .substr(0, 2)
+        .toUpperCase();
+
 export const closeConfirmationModalObject = {
     open: false,
-    title: '',
-    message: '',
     onConfirmYesAction: noop,
     onConfirmNoAction: noop,
 };

@@ -67,6 +67,7 @@ export const usePenerimaanIuran = () => {
                 id: 'from',
                 label: 'dari',
                 gridColumn: 3,
+                gridColumnSmall: 6,
                 type: 'date',
             },
             {
@@ -74,6 +75,7 @@ export const usePenerimaanIuran = () => {
                 id: 'to',
                 label: 'sampai',
                 gridColumn: 3,
+                gridColumnSmall: 6,
                 type: 'date',
             },
         ],

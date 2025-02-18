@@ -17,6 +17,7 @@ import { monthList } from '../../utils/constants';
 import { PendudukCard } from './penduduk-card';
 
 const StyledDiv = styled('div')(() => ({
+    width: '100%',
     display: 'flex',
     flexDirection: 'row',
     gap: '10px',
@@ -33,6 +34,7 @@ export const PenerimaanIuranCard = ({
     hasDeleteButton = false,
     hasValidateButton = false,
     onDelete = noop,
+    onValidateAccept = noop,
 }) => {
     const periodMonth = !penerimaanIuran
         ? ''
@@ -52,7 +54,7 @@ export const PenerimaanIuranCard = ({
                                 disabled
                                 fullWidth
                                 label="Nama Iuran"
-                                value={penerimaanIuran.MasterIuran.iuranName}
+                                value={penerimaanIuran?.MasterIuran?.iuranName}
                                 variant="standard"
                             />
                         </Grid>
@@ -61,7 +63,7 @@ export const PenerimaanIuranCard = ({
                                 disabled
                                 fullWidth
                                 label="Kolektor"
-                                value={penerimaanIuran.Kolektor.name}
+                                value={penerimaanIuran?.Kolektor?.name}
                                 variant="standard"
                             />
                         </Grid>
@@ -71,7 +73,7 @@ export const PenerimaanIuranCard = ({
                                 fullWidth
                                 label="Tgl. Transaksi"
                                 value={formatDate(
-                                    penerimaanIuran.transactionDate
+                                    penerimaanIuran?.transactionDate
                                 )}
                                 variant="standard"
                             />
@@ -100,7 +102,7 @@ export const PenerimaanIuranCard = ({
                     {hasDeleteButton && (
                         <Button
                             size="small"
-                            variant="contained"
+                            variant="outlined"
                             color="warning"
                             onClick={() => void onDelete(penerimaanIuran.id)}
                         >
@@ -111,14 +113,17 @@ export const PenerimaanIuranCard = ({
                         <>
                             <Button
                                 size="small"
-                                variant="contained"
+                                variant="outlined"
                                 color="success"
+                                onClick={() =>
+                                    void onValidateAccept(penerimaanIuran.id)
+                                }
                             >
                                 Validasi Terima
                             </Button>
                             <Button
                                 size="small"
-                                variant="contained"
+                                variant="outlined"
                                 color="error"
                             >
                                 Validasi Tolak
@@ -129,7 +134,7 @@ export const PenerimaanIuranCard = ({
             </StyledCard>
         </StyledDiv>
     ) : (
-        <Alert severity="info">
+        <Alert severity="info" sx={{ width: '100%' }}>
             Tidak ada data penerimaan iuran yang dipilih
         </Alert>
     );
@@ -140,4 +145,5 @@ PenerimaanIuranCard.propTypes = {
     hasDeleteButton: PropTypes.bool,
     hasValidateButton: PropTypes.bool,
     onDelete: PropTypes.func,
+    onValidateAccept: PropTypes.func,
 };

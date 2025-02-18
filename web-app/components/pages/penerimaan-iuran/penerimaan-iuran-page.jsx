@@ -1,11 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { MasterPage } from '../master-page';
 import { TabLayout } from '../../organisms/tab-layout';
 import { listData as listDataKolektor } from '../kolektor/kolektor-functions';
 import { PenerimaanIuranFormInput } from './penerimaan-iuran-form-input';
-import PenerimaanIuranList from './penerimaan-iuran-list';
+import { PenerimaanIuranList } from './penerimaan-iuran-list';
+import PropTypes from 'prop-types';
 
-export const PenerimaanIuran = () => {
+export const PenerimaanIuranType = {
+    WITH_KOLEKTOR: Symbol('WITH_KOLEKTOR'),
+    WITHOUT_KOLEKTOR: Symbol('WITHOUT_KOLEKTOR'),
+};
+
+export const PenerimaanIuranPageContext = createContext();
+
+export const PenerimaanIuran = ({ type }) => {
     const [listKolektor, setListKolektor] = useState([]);
 
     useEffect(() => {
@@ -31,7 +39,16 @@ export const PenerimaanIuran = () => {
 
     return (
         <MasterPage>
-            <TabLayout tabElement={penerimaanIuranTabElement} />
+            <PenerimaanIuranPageContext.Provider value={{ type }}>
+                <TabLayout
+                    tabElement={penerimaanIuranTabElement}
+                    resetIndexTrigger={type}
+                />
+            </PenerimaanIuranPageContext.Provider>
         </MasterPage>
     );
+};
+
+PenerimaanIuran.propTypes = {
+    type: PropTypes.symbol,
 };

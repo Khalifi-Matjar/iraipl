@@ -15,3 +15,22 @@ export const listData = (searchParams) => {
         },
     });
 };
+
+export const validatePenerimaan = ({
+    penerimaanId,
+    validationStatus,
+    summary,
+}) => {
+    return axios({
+        method: 'post',
+        data: {
+            penerimaanId,
+            validationStatus,
+            summary,
+        },
+        url: '/api/penerimaan-iuran/validate',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+        },
+    });
+};

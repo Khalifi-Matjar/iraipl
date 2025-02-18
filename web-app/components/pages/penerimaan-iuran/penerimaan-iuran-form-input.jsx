@@ -7,22 +7,27 @@ import isNull from 'lodash/isNull';
 import PropTypes from 'prop-types';
 import { Button, Divider, Typography } from '@mui/material';
 import {
-    closeConfirmationModalObject,
     dateFormat,
     formatDate,
     LOCAL_STORAGE_TOKEN_KEY,
 } from '../../../utils';
 import { SnackbarContext } from '../../context/snackbar-context';
-import { ConfirmationModal } from '../../organisms/confirmation-modal';
 import { LocalTable } from '../../organisms/local-table';
 import { PendudukCard } from '../../organisms/penduduk-card';
 import { TabLayoutContext } from '../../organisms/tab-layout';
 import { monthList } from '../../../utils/constants';
 import { usePenduduk } from '../penduduk/penduduk-hooks';
+import {
+    PenerimaanIuranPageContext,
+    PenerimaanIuranType,
+} from './penerimaan-iuran-page';
+import { ConfirmationContext } from '../../context/confirmation-context';
 
 export const PenerimaanIuranFormInput = ({ kolektor }) => {
+    const penerimaanIuranPage = useContext(PenerimaanIuranPageContext);
     const tabLayout = useContext(TabLayoutContext);
     const snackbar = useContext(SnackbarContext);
+    const confirmation = useContext(ConfirmationContext);
     const {
         pendudukTblColDef,
         pendudukTblRows,
@@ -33,17 +38,24 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
 
     const [choosenPenduduk, setChoosenPenduduk] = useState(null);
 
-    const formDefinition = useMemo(
-        () => [
+    const formDefinition = useMemo(() => {
+        const baseDefinition = [
             {
                 name: 'iuranId',
                 id: 'iuranId',
                 label: 'Nama Iuran',
                 gridColumn: 6,
-                options: jenisIuran.map(({ id, iuranName }) => ({
-                    label: iuranName,
-                    value: id,
-                })),
+                options: jenisIuran
+                    .filter(
+                        ({ requireCollector }) =>
+                            Boolean(requireCollector) ===
+                            (penerimaanIuranPage.type ===
+                                PenerimaanIuranType.WITH_KOLEKTOR)
+                    )
+                    .map(({ id, iuranName }) => ({
+                        label: iuranName,
+                        value: id,
+                    })),
                 validationSchema: Yup.string().required('Berikan nama iuran'),
             },
             {
@@ -94,19 +106,25 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                 type: 'number',
                 validationSchema: Yup.string().required('Pilih bulan periode'),
             },
-        ],
-        [jenisIuran, kolektor]
-    );
+        ];
 
-    const [confirmModalProps, setConfirmModalProps] = useState(
-        closeConfirmationModalObject
-    );
+        if (penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR) {
+            return baseDefinition;
+        } else {
+            delete baseDefinition[3]; // remove kolektorId input from definition
+
+            return baseDefinition;
+        }
+    }, [jenisIuran, kolektor, penerimaanIuranPage.type]);
 
     const [formValueDefinition, setFormValueDefinition] = useState({
         iuranId: '',
         amount: '',
         transactionDate: formatDate(new Date(), dateFormat.SYSTEM),
-        kolektorId: '',
+        kolektorId:
+            penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR
+                ? ''
+                : undefined,
         periodMonth: '',
         periodYear: '',
     });
@@ -115,71 +133,80 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
         () => ({
             label: 'Simpan data iuran',
             onSubmit: (value) => {
-                setConfirmModalProps({
-                    open: true,
-                    title: 'Simpan data penerimaan iuran',
-                    message:
-                        'Anda yakin akan menyimpan data penerimaan iuran ini?',
-                    onConfirmYesAction: () => {
+                confirmation.setTitle('Simpan data penerimaan iuran');
+                confirmation.setMessage(
+                    'Anda yakin akan menyimpan data penerimaan iuran ini?'
+                );
+                confirmation.setOpen(true);
+                confirmation.setOnConfirmYesAction(() => () => {
+                    const savingProcess = () => {
+                        axios({
+                            method: 'post',
+                            url: '/api/penerimaan-iuran/add?add_by_kolektor=false',
+                            data: {
+                                ...value,
+                                pendudukId: choosenPenduduk?.id,
+                            },
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+                            },
+                        })
+                            .then(() => {
+                                snackbar.setOpen(true);
+                                snackbar.setType('success');
+                                snackbar.setMessage(
+                                    'Data penerimaan iuran telah disimpan'
+                                );
+
+                                /** clear form input and choosen penduduk */
+                                setChoosenPenduduk(null);
+                                setFormValueDefinition({
+                                    iuranId: '',
+                                    amount: '',
+                                    transactionDate: formatDate(
+                                        new Date(),
+                                        dateFormat.SYSTEM
+                                    ),
+                                    kolektorId:
+                                        penerimaanIuranPage.type ===
+                                        PenerimaanIuranType.WITH_KOLEKTOR
+                                            ? ''
+                                            : undefined,
+                                    periodMonth: '',
+                                    periodYear: '',
+                                });
+                                tabLayout.setActiveIndex(0);
+                            })
+                            .catch((error) => {
+                                snackbar.setOpen(true);
+                                snackbar.setType('error');
+                                snackbar.setMessage(
+                                    `${error.message} - ${error.response.data.message}`
+                                );
+                            })
+                            .finally(() =>
+                                /** close confirmation modal */
+                                confirmation.setOpen(false)
+                            );
+                    };
+
+                    if (
+                        penerimaanIuranPage.type ===
+                        PenerimaanIuranType.WITH_KOLEKTOR
+                    ) {
                         if (isNull(choosenPenduduk)) {
                             snackbar.setOpen(true);
                             snackbar.setType('error');
                             snackbar.setMessage(
                                 'Pilih penduduk yang membayar iuran'
                             );
-                            setConfirmModalProps(closeConfirmationModalObject);
+                            confirmation.setOpen(false);
                         } else {
-                            axios({
-                                method: 'post',
-                                url: '/api/penerimaan-iuran/add',
-                                data: {
-                                    ...value,
-                                    pendudukId: choosenPenduduk.id,
-                                },
-                                headers: {
-                                    Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
-                                },
-                            })
-                                .then(() => {
-                                    snackbar.setOpen(true);
-                                    snackbar.setType('success');
-                                    snackbar.setMessage(
-                                        'Data penerimaan iuran telah disimpan'
-                                    );
-
-                                    /** clear form input and choosen penduduk */
-                                    setChoosenPenduduk(null);
-                                    setFormValueDefinition({
-                                        iuranId: '',
-                                        amount: '',
-                                        transactionDate: formatDate(
-                                            new Date(),
-                                            dateFormat.SYSTEM
-                                        ),
-                                        kolektorId: '',
-                                        periodMonth: '',
-                                        periodYear: '',
-                                    });
-                                    tabLayout.setActiveIndex(0);
-                                })
-                                .catch((error) => {
-                                    snackbar.setOpen(true);
-                                    snackbar.setType('error');
-                                    snackbar.setMessage(
-                                        `${error.message} - ${error.response.data.message}`
-                                    );
-                                })
-                                .finally(
-                                    () =>
-                                        /** close confirmation modal */
-                                        void setConfirmModalProps(
-                                            closeConfirmationModalObject
-                                        )
-                                );
+                            savingProcess();
                         }
-                    },
-                    onConfirmNoAction: () =>
-                        void setConfirmModalProps(closeConfirmationModalObject),
+                    } else {
+                        savingProcess();
+                    }
                 });
             },
         }),
@@ -243,7 +270,11 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
             <br />
             <Divider>
                 <Typography variant="h6" sx={{ color: '#0000007a' }}>
-                    Penerimaan Iuran
+                    Penerimaan Iuran{' '}
+                    {penerimaanIuranPage.type ===
+                    PenerimaanIuranType.WITH_KOLEKTOR
+                        ? 'Dengan Kolektor'
+                        : 'Tanpa Kolektor'}
                 </Typography>
             </Divider>
             <br />
@@ -254,7 +285,6 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                 valueDefinitions={formValueDefinition}
                 submitDefinition={formSubmitDefinition}
             />
-            <ConfirmationModal {...confirmModalProps} />
         </>
     );
 };

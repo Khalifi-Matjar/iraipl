@@ -1,6 +1,6 @@
 import { Box, styled, Tab, Tabs } from '@mui/material';
 import PropTypes from 'prop-types';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 const ChildrenContainer = styled('div')(() => ({
     width: '100%',
@@ -8,8 +8,12 @@ const ChildrenContainer = styled('div')(() => ({
 
 export const TabLayoutContext = createContext();
 
-export const TabLayout = ({ tabElement }) => {
+export const TabLayout = ({ tabElement, resetIndexTrigger }) => {
     const [activeIndex, setActiveIndex] = useState(0);
+
+    useEffect(() => {
+        setActiveIndex(0);
+    }, [resetIndexTrigger]);
 
     const handleChange = (_event, newValue) => {
         setActiveIndex(newValue);
@@ -45,4 +49,5 @@ TabLayout.propTypes = {
             children: PropTypes.node,
         })
     ),
+    resetIndexTrigger: PropTypes.any,
 };

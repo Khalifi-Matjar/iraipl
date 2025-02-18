@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "nodemon --ext js,jsx,css,scss,json,twig --ignore \"public/javascripts/web-app.js\" --exec \"npx eslint web-app && npm run build-web-app && dotenvx run --env-file=.env.development -- node ./bin/www\"",
-        "build-web-app": "esbuild web-app/index.js --bundle --outfile=public/javascripts/web-app.js --loader:.js=jsx",
+        "build-web-app": "esbuild web-app/index.js --bundle --minify --outfile=public/javascripts/web-app.js --loader:.js=jsx",
         "db:migrate:create": "npx sequelize-cli migration:generate --name ",
         "db:migrate:up": "npx sequelize-cli db:migrate",
         "db:migrate:down": "npx sequelize-cli db:migrate:undo:all",
@@ -22,6 +22,7 @@
         "@mui/material": "^5.16.7",
         "@tanstack/react-table": "^8.9.3",
         "axios": "^1.7.5",
+        "compression": "^1.8.0",
         "cookie-parser": "~1.4.4",
         "debug": "~2.6.9",
         "esbuild": "^0.23.1",
