@@ -189,11 +189,13 @@ export const KolektorsPortalInputPenerimaan = () => {
             <br />
             <PendudukCard penduduk={choosenPenduduk} />
             <br />
-            <FormBuilder
-                formDefinitions={formDefinition}
-                valueDefinitions={formValueDefinition}
-                submitDefinition={formSubmitDefinition}
-            />
+            <div style={{ padding: '0 5px 0' }}>
+                <FormBuilder
+                    formDefinitions={formDefinition}
+                    valueDefinitions={formValueDefinition}
+                    submitDefinition={formSubmitDefinition}
+                />
+            </div>
             <ConfirmationModal {...confirmModalProps} />
         </>
     );

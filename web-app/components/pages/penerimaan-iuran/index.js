@@ -1,1 +1,1 @@
-export { PenerimaanIuran } from './penerimaan-iuran-page';
+export * from './penerimaan-iuran-page';

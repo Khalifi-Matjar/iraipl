@@ -54,7 +54,10 @@ export const PenerimaanIuranCard = ({
                                 disabled
                                 fullWidth
                                 label="Nama Iuran"
-                                value={penerimaanIuran?.MasterIuran?.iuranName}
+                                value={
+                                    penerimaanIuran?.MasterIuran?.iuranName ??
+                                    '-'
+                                }
                                 variant="standard"
                             />
                         </Grid>
@@ -63,7 +66,7 @@ export const PenerimaanIuranCard = ({
                                 disabled
                                 fullWidth
                                 label="Kolektor"
-                                value={penerimaanIuran?.Kolektor?.name}
+                                value={penerimaanIuran?.Kolektor?.name ?? '-'}
                                 variant="standard"
                             />
                         </Grid>

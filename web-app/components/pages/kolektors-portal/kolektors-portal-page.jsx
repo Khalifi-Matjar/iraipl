@@ -28,7 +28,7 @@ export const KolektorsPortal = () => {
             {
                 menuLabel: 'Logout',
                 menuIcon: <ExitToAppIcon />,
-                children: <div>Logout</div>,
+                children: <div />,
             },
         ],
         []

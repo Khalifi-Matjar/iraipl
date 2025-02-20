@@ -12,15 +12,15 @@ import {
     IconButton,
     Divider,
 } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { GridViewOutlined } from '@mui/icons-material';
+import { ConfirmationContext } from '../../context/confirmation-context';
+import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
 
 const StyledBox = styled(Box)(() => ({
     width: '16.0dvw',
-    height: '99.0dvh',
-    backgroundColor: '#f6f6f6',
     borderRadius: '7px',
     flexShrink: 0,
     padding: '8px 8px',
@@ -96,6 +96,7 @@ const StyledListItemText = styled(ListItemText)(() => ({
 }));
 
 export const Sidebar = () => {
+    const confirmation = useContext(ConfirmationContext);
     return (
         <StyledBox>
             <ProfileBox>
@@ -212,7 +213,19 @@ export const Sidebar = () => {
                     subheader={
                         <StyledListSubheader> LAPORAN</StyledListSubheader>
                     }
-                ></List>
+                >
+                    <StyledListItem disablePadding>
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/laporan-penerimaan-iuran"
+                        >
+                            <ListItemIcon>
+                                <GridViewOutlined fontSize="small" />
+                            </ListItemIcon>
+                            <StyledListItemText primary="Penerimaan Iuran" />
+                        </StyledListItemButton>
+                    </StyledListItem>
+                </List>
                 <List
                     sx={{ marginTop: '10px' }}
                     subheader={<StyledListSubheader> USER</StyledListSubheader>}
@@ -234,7 +247,22 @@ export const Sidebar = () => {
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>
-                        <StyledListItemButton>
+                        <StyledListItemButton
+                            onClick={(e) => {
+                                confirmation.setTitle('Logout');
+                                confirmation.setMessage(
+                                    'Anda yakin akan logout?'
+                                );
+                                confirmation.setOpen(true);
+                                confirmation.setOnConfirmYesAction(() => () => {
+                                    localStorage.removeItem(
+                                        LOCAL_STORAGE_TOKEN_KEY
+                                    );
+                                    location.href = '/';
+                                });
+                                e.preventDefault();
+                            }}
+                        >
                             <ListItemIcon>
                                 <GridViewOutlined fontSize="small" />
                             </ListItemIcon>

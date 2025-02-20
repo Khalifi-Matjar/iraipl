@@ -13,7 +13,7 @@ import {
     Snackbar,
 } from '@mui/material';
 import React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import { useFormik } from 'formik';
@@ -95,7 +95,6 @@ export const Login = () => {
     const [open, setOpen] = React.useState(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false); // untuk Snackbar
     const [snackbarMessage, setSnackbarMessage] = React.useState(''); // pesan untuk Snackbar
-    let navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -122,7 +121,8 @@ export const Login = () => {
                         setSnackbarMessage('Login berhasil');
                         setSnackbarOpen(true);
                         setTimeout(() => {
-                            navigate('/dashboard');
+                            // navigate('/dashboard');
+                            location.href = '/'; // server side redirect to affect router authorization
                         }, 1500);
                     } else {
                         console.error('No token');

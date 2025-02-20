@@ -7,3 +7,4 @@ export * from './penduduk';
 export * from './kolektor';
 export * from './penerimaan-iuran';
 export * from './kolektors-portal';
+export * from './laporan-penerimaan-iuran';

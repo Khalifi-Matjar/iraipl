@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # generated bundle
-public/javascripts/web-app.js
+public/javascripts/*
 
 # Runtime data
 pids

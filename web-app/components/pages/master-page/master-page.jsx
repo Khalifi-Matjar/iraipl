@@ -4,20 +4,16 @@ import { Sidebar } from '../layout';
 import PropTypes from 'prop-types';
 
 const StyledBox = styled(Box)(() => ({
-    width: '100dvw',
-    height: '100dvh',
     display: 'flex',
     justifyContent: 'flex-start',
     overflowX: 'hidden',
 }));
 const StyledMain = styled(Box)(() => ({
+    flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    width: '100%',
     padding: '20px',
-    height: '100dvh',
-    overflow: 'auto',
 }));
 
 export const MasterPage = ({ children }) => {

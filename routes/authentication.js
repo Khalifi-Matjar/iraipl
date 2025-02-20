@@ -1,6 +1,7 @@
 var express = require('express');
 const { hashText, signJwt } = require('../utils/encodings');
 const db = require('../database/models');
+const { authorizeApi } = require('../utils/authorize-route');
 var router = express.Router();
 
 /* GET home page. */
@@ -36,6 +37,43 @@ router.post('/login-attempt', async function (req, res, _next) {
             },
         });
     }
+    res.end();
+});
+
+router.get('/get-user-details', async function (req, res, _next) {
+    let httpResponseCode;
+    let httpResponse;
+    try {
+        const findUser = await authorizeApi(req);
+        if (!!findUser) {
+            httpResponseCode = 200;
+            httpResponse = {
+                success: true,
+                message: 'Success retrieving user details data',
+                findUser,
+            };
+        } else {
+            httpResponseCode = 401;
+            httpResponse = {
+                success: false,
+                message: 'Unauthorized user',
+            };
+        }
+    } catch (error) {
+        if (error) {
+            httpResponseCode = 500;
+            httpResponse = {
+                success: false,
+                message: error.message,
+                metadata: {
+                    error,
+                },
+            };
+        }
+    }
+
+    res.status(httpResponseCode);
+    res.json(httpResponse);
     res.end();
 });
 
