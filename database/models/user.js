@@ -12,14 +12,24 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(models.RoleUser, {
                 foreignKey: 'roleUserId',
             });
+
+            this.belongsTo(models.Kolektor, {
+                foreignKey: 'kolektorId',
+            });
         }
     }
     User.init(
         {
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true,
+                defaultValue: DataTypes.UUIDV4,
+            },
             name: DataTypes.STRING,
             email: DataTypes.STRING,
             password: DataTypes.STRING,
             roleUserId: DataTypes.INTEGER,
+            kolektorId: DataTypes.STRING,
         },
         {
             sequelize,

@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+    <head>
+        <title>IRA IPL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style type="text/css">
+            h1, h2, h3, h4, h5, h6 {
+                margin: 0;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 12px;
+            }
+            table {
+                width: 100%;
+                table-layout: auto;
+                border-collapse: collapse;
+            }
+            tbody tr:nth-child(odd) {
+                background-color: #cccccc4d;
+            }
+            th,td {
+                padding: 5px;
+            }
+            hr {
+                border: solid 1px #cccccc4d;
+            }
+        </style>
+        <style type="text/css" media="print">
+            @page {
+                margin: 0.3cm;
+                size: landscape;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Laporan Rincian Penerimaan Iuran</h1>
+        <h3>Tanggal {{from|date('d F Y')}} S/D {{to|date('d F Y')}}</h3>
+        <br />
+        <table>
+            <thead>
+                <tr>
+                    <th width="40px" align="right">No.</th>
+                    <th width="150px" align="center">Tgl. Transaksi</th>
+                    <th align="left">Jenis Iuran</th>
+                    <th align="left">Perumahan</th>
+                    <th align="left">Atas Nama</th>
+                    <th width="100px" align="right">Jumlah</th>
+                    <th align="left">Kolektor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for penerimaan in penerimaanIuran %}
+                    <tr>
+                        <td align="right">{{loop.index}}</td>
+                        <td align="center">{{penerimaan.transactionDate|date('d F Y')}}</td>
+                        <td>{{penerimaan.MasterIuran.iuranName}}</td>
+                        <td>{{penerimaan.Penduduk.Perumahan.perumahan}}</td>
+                        <td>{{penerimaan.Penduduk.pic}}</td>
+                        <td align="right">{{penerimaan.amount|number_format(2)}}</td>
+                        <td>{{penerimaan.Kolektor.name}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

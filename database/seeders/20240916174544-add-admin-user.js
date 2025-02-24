@@ -1,6 +1,7 @@
 'use strict';
 
 var crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -14,10 +15,18 @@ module.exports = {
          *   isBetaMember: false
          * }], {});
          */
-        const password = crypto.createHash('sha256').update('12345').digest('hex');
-        await queryInterface.bulkDelete('tbl-user', { email: 'devadmin@app' }, {});
+        const password = crypto
+            .createHash('sha256')
+            .update('12345')
+            .digest('hex');
+        await queryInterface.bulkDelete(
+            'tbl-user',
+            { email: 'devadmin@app' },
+            {}
+        );
         await queryInterface.bulkInsert('tbl-user', [
             {
+                id: uuidv4(),
                 name: 'development admin',
                 email: 'devadmin@app',
                 password,
@@ -35,6 +44,10 @@ module.exports = {
          * Example:
          * await queryInterface.bulkDelete('People', null, {});
          */
-        await queryInterface.bulkDelete('tbl-user', { email: 'devadmin@app' }, {});
+        await queryInterface.bulkDelete(
+            'tbl-user',
+            { email: 'devadmin@app' },
+            {}
+        );
     },
 };

@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # generated bundle
-public/javascripts/web-app.js
+public/javascripts/*
 
 # Runtime data
 pids
@@ -64,3 +64,5 @@ typings/
 
 # next.js build output
 .next
+
+*storybook.log
