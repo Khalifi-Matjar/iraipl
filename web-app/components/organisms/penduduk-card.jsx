@@ -1,20 +1,27 @@
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Alert,
-    Card,
-    CardContent,
     Grid,
     TextField,
     Typography,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 export const PendudukCard = ({ penduduk }) => {
     return penduduk ? (
-        <Card variant="outlined" sx={{ flexBasis: '50%' }}>
-            <CardContent>
+        <Accordion sx={{ width: '100%' }}>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+            >
                 <Typography variant="h6">Data Penduduk</Typography>
-                <br />
+            </AccordionSummary>
+            <AccordionDetails>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
@@ -53,8 +60,8 @@ export const PendudukCard = ({ penduduk }) => {
                         />
                     </Grid>
                 </Grid>
-            </CardContent>
-        </Card>
+            </AccordionDetails>
+        </Accordion>
     ) : (
         <Alert severity="info" sx={{ flexBasis: '50%' }}>
             Tidak ada penduduk yang dipilih

@@ -121,7 +121,6 @@ export const Login = () => {
                         setSnackbarMessage('Login berhasil');
                         setSnackbarOpen(true);
                         setTimeout(() => {
-                            // navigate('/dashboard');
                             location.href = '/'; // server side redirect to affect router authorization
                         }, 1500);
                     } else {

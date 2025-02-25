@@ -14,3 +14,5 @@ export const monthList = [
     'November',
     'December',
 ].map((month, index) => ({ monthName: month, monthNumber: index + 1 }));
+
+export const paymentType = ['Cash', 'Transfer'];

@@ -56,13 +56,17 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            periodMonth: {
+            periodStart: {
                 allowNull: false,
-                type: Sequelize.SMALLINT,
+                type: Sequelize.STRING,
             },
-            periodYear: {
+            periodEnd: {
                 allowNull: false,
-                type: Sequelize.SMALLINT,
+                type: Sequelize.STRING,
+            },
+            paymentType: {
+                allowNull: false,
+                type: Sequelize.STRING,
             },
             summary: {
                 allowNull: true,

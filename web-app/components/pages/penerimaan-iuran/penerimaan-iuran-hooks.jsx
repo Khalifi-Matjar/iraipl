@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { monthList } from '../../../utils/constants';
 import { dateFormat, formatDate, formatMoney } from '../../../utils';
@@ -41,18 +41,37 @@ export const usePenerimaanIuran = () => {
             {
                 header: 'Jumlah',
                 accessorKey: 'amount',
-                cell: ({ row }) => formatMoney(row.original.amount),
+                cell: ({ row }) => (
+                    <>
+                        {formatMoney(row.original.amount)}
+                        <br />
+                        <Chip label={row.original.paymentType} />
+                    </>
+                ),
                 align: 'right',
             },
             {
-                header: 'Periode',
-                accessorKey: 'periodMonth',
+                header: 'Bayar untuk',
+                accessorKey: 'periodStart',
                 cell: ({ row }) => {
-                    const periodMonth =
-                        monthList[row.original.periodMonth - 1].monthName;
-                    const periodYear = row.original.periodYear;
+                    const [yearStart, monthStart] =
+                        row.original.periodStart.split('-');
+                    const [yearEnd, monthEnd] =
+                        row.original.periodEnd.split('-');
+                    const periodMonthStart =
+                        monthList[parseInt(monthStart) - 1].monthName;
+                    const periodMonthEnd =
+                        monthList[parseInt(monthEnd) - 1].monthName;
 
-                    return `${periodMonth} ${periodYear}`;
+                    return (
+                        <>
+                            {periodMonthStart} {yearStart}
+                            <br />
+                            S/D
+                            <br />
+                            {periodMonthEnd} {yearEnd}
+                        </>
+                    );
                 },
             },
         ],
