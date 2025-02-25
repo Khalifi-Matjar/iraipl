@@ -52,6 +52,11 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
         });
     };
 
+    const [yearStart, monthStart] = penerimaan?.periodStart?.split('-') ?? [];
+    const [yearEnd, monthEnd] = penerimaan?.periodEnd?.split('-') ?? [];
+    const periodMonthStart = monthList[parseInt(monthStart) - 1]?.monthName;
+    const periodMonthEnd = monthList[parseInt(monthEnd) - 1]?.monthName;
+
     return (
         <Box sx={{ position: 'relative' }}>
             <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
@@ -68,11 +73,12 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: '500' }}>
                         {formatMoney(penerimaan.amount)}
+                        <br />
+                        <Chip label={penerimaan.paymentType} />
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: '500' }}>
-                        Periode:{' '}
-                        {monthList[penerimaan.periodMonth - 1].monthName}{' '}
-                        {penerimaan.periodYear}
+                        {periodMonthStart} {yearStart}-{periodMonthEnd}{' '}
+                        {yearEnd}
                     </Typography>
                     <br />
                     <Chip
@@ -105,14 +111,10 @@ PenerimaanSearchItem.propTypes = {
 export const KolektorsPortalListPenerimaan = () => {
     const snackbar = useContext(SnackbarContext);
     const {
-        // penerimaanIuranTblColDef,
         penerimaanIuranTblData,
         setPenerimaanIuranTblData,
-        // highlightedPenerimaan,
-        // setHighlightedPenerimaan,
         penerimaanIuranSearchFormDef,
         setSearchFormValue,
-        // searchFormValue,
         penerimaanIuranSearchFormValue,
     } = usePenerimaanIuran();
 

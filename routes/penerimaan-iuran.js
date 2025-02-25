@@ -122,8 +122,9 @@ router.post('/add', async function (req, res, _next) {
             iuranId,
             pendudukId,
             kolektorId,
-            periodMonth,
-            periodYear,
+            periodStart,
+            periodEnd,
+            paymentType,
             summary,
         } = req.body;
 
@@ -134,8 +135,9 @@ router.post('/add', async function (req, res, _next) {
                 iuranId,
                 pendudukId,
                 kolektorId: isAddByKolektor ? findUser.Kolektor.id : kolektorId,
-                periodMonth,
-                periodYear,
+                periodStart,
+                periodEnd,
+                paymentType,
                 summary,
             });
 
