@@ -20,9 +20,11 @@ import {
     Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PrintIcon from '@mui/icons-material/Print';
 import PropTypes from 'prop-types';
 import { monthList } from '../../../utils/constants';
 import { ConfirmationContext } from '../../context/confirmation-context';
+import { KolektorsPortalContext } from './kolektors-portal-page';
 
 const StyledLink = styled('a')(() => ({
     background: 'transparent',
@@ -39,6 +41,7 @@ const StyledFloatingFunctionButton = styled('div')(() => ({
 }));
 
 const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
+    const kolektorsPortalContext = useContext(KolektorsPortalContext);
     const confirmation = useContext(ConfirmationContext);
     const onDeleteClick = (e) => {
         e.stopPropagation();
@@ -51,6 +54,11 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
             onDelete(penerimaan.id);
         });
     };
+
+    const [yearStart, monthStart] = penerimaan?.periodStart?.split('-') ?? [];
+    const [yearEnd, monthEnd] = penerimaan?.periodEnd?.split('-') ?? [];
+    const periodMonthStart = monthList[parseInt(monthStart) - 1]?.monthName;
+    const periodMonthEnd = monthList[parseInt(monthEnd) - 1]?.monthName;
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -68,11 +76,12 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: '500' }}>
                         {formatMoney(penerimaan.amount)}
+                        <br />
+                        <Chip label={penerimaan.paymentType} />
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: '500' }}>
-                        Periode:{' '}
-                        {monthList[penerimaan.periodMonth - 1].monthName}{' '}
-                        {penerimaan.periodYear}
+                        {periodMonthStart} {yearStart}-{periodMonthEnd}{' '}
+                        {yearEnd}
                     </Typography>
                     <br />
                     <Chip
@@ -85,12 +94,31 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                 </Stack>
             </Stack>
             <StyledFloatingFunctionButton>
+                <div>
+                    <Chip
+                        label={formatDate(penerimaan.transactionDate)}
+                        color="success"
+                        size="small"
+                    />
+                </div>
                 <IconButton
                     color="warning"
                     size="large"
                     onClick={onDeleteClick}
                 >
                     <DeleteIcon />
+                </IconButton>
+
+                <IconButton
+                    color="primary"
+                    size="large"
+                    // target="_blank"
+                    // href={`/report/penerimaan-iuran/receipt?id=${penerimaan.id}`}
+                    onClick={() => {
+                        kolektorsPortalContext.printReceipt(penerimaan.id);
+                    }}
+                >
+                    <PrintIcon />
                 </IconButton>
             </StyledFloatingFunctionButton>
         </Box>
@@ -105,14 +133,10 @@ PenerimaanSearchItem.propTypes = {
 export const KolektorsPortalListPenerimaan = () => {
     const snackbar = useContext(SnackbarContext);
     const {
-        // penerimaanIuranTblColDef,
         penerimaanIuranTblData,
         setPenerimaanIuranTblData,
-        // highlightedPenerimaan,
-        // setHighlightedPenerimaan,
         penerimaanIuranSearchFormDef,
         setSearchFormValue,
-        // searchFormValue,
         penerimaanIuranSearchFormValue,
     } = usePenerimaanIuran();
 

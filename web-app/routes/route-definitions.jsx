@@ -29,26 +29,6 @@ const findUserDetails = () =>
         },
     });
 
-// const Authenticator = () => {
-//     const [isAuthenticated, setIsAuthenticated] = useState(null);
-
-//     useEffect(() => {
-//         findUserDetails()
-//             .then(() => setIsAuthenticated(true))
-//             .catch(() => setIsAuthenticated(false));
-//     }, []);
-
-//     if (isNull(isAuthenticated)) {
-//         return 'Authenticating';
-//     } else {
-//         if (isAuthenticated) {
-//             return <Outlet />;
-//         } else {
-//             return <Navigate to="/login" />;
-//         }
-//     }
-// };
-
 const Authorizer = ({ isHomePath = false, isAuthorizeForKolektor }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
     const [userDetails, setUserDetails] = useState(null);

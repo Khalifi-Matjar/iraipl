@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 
 import { PendudukCard } from '../../organisms/penduduk-card';
 import { FormBuilder } from '../../organisms/form-builder';
-import { LOCAL_STORAGE_TOKEN_KEY, monthList } from '../../../utils/constants';
+import { LOCAL_STORAGE_TOKEN_KEY, paymentType } from '../../../utils/constants';
 import {
     closeConfirmationModalObject,
     dateFormat,
@@ -15,6 +15,7 @@ import { Button, Divider, Typography } from '@mui/material';
 import { KolektorsPortalSearchPendudukDrawer } from './kolektors-portal-search-penduduk-drawer';
 import { SnackbarContext } from '../../context/snackbar-context';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
+import { KolektorsPortalContext } from './kolektors-portal-page';
 
 export const KolektorsPortalInputPenerimaan = () => {
     const [confirmModalProps, setConfirmModalProps] = useState(
@@ -61,25 +62,34 @@ export const KolektorsPortalInputPenerimaan = () => {
                 validationSchema: Yup.date().required('Berikan tgl transaksi'),
             },
             {
-                name: 'periodMonth',
-                id: 'periodeMonth',
-                label: 'Bulan periode',
+                name: 'periodStart',
+                id: 'periodStart',
+                label: 'Periode awal',
                 gridColumn: 3,
-                gridColumnSmall: 6,
-                options: monthList.map(({ monthName, monthNumber }) => ({
-                    label: monthName,
-                    value: monthNumber,
-                })),
-                validationSchema: Yup.string().required('Pilih bulan periode'),
+                type: 'month',
+                validationSchema: Yup.string().required('Pilih periode awal'),
             },
             {
-                name: 'periodYear',
-                id: 'periodeYear',
-                label: 'Tahun periode',
+                name: 'periodEnd',
+                id: 'periodEnd',
+                label: 'Periode akhir',
                 gridColumn: 3,
-                gridColumnSmall: 6,
-                type: 'number',
-                validationSchema: Yup.string().required('Pilih bulan periode'),
+                type: 'month',
+                validationSchema: Yup.string().required('Pilih periode akhir'),
+            },
+            {
+                name: 'paymentType',
+                id: 'paymentType',
+                label: 'Tipe pembayaran',
+                gridColumn: 4,
+                options: paymentType.map((paymentType) => ({
+                    label: paymentType,
+                    value: paymentType,
+                })),
+                optionsFieldType: 'radio',
+                validationSchema: Yup.string().required(
+                    'Pilih tipe pembayaran'
+                ),
             },
         ],
         [jenisIuran]
@@ -92,6 +102,8 @@ export const KolektorsPortalInputPenerimaan = () => {
         periodMonth: '',
         periodYear: '',
     });
+
+    const kolektorsPortalContext = useContext(KolektorsPortalContext);
 
     const formSubmitDefinition = {
         label: 'Simpan penerimaan iuran',
@@ -121,11 +133,16 @@ export const KolektorsPortalInputPenerimaan = () => {
                                 Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
                             },
                         })
-                            .then(() => {
+                            .then((response) => {
                                 snackbar.setOpen(true);
                                 snackbar.setType('success');
                                 snackbar.setMessage(
                                     'Data penerimaan iuran telah disimpan'
+                                );
+
+                                console.log('resp', response);
+                                kolektorsPortalContext.printReceipt(
+                                    response.data.metadata.penerimaan.id
                                 );
 
                                 /** clear form input and choosen penduduk */

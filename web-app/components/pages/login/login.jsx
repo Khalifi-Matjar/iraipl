@@ -1,19 +1,16 @@
 import {
     Box,
     styled,
-    Typography,
     Paper,
     Grid,
     TextField,
     Button,
     InputAdornment,
-    Link,
     Backdrop,
     CircularProgress,
     Snackbar,
 } from '@mui/material';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import { useFormik } from 'formik';
@@ -39,15 +36,6 @@ const StyledGrid = styled(Grid)(() => ({
     display: 'flex',
     justifyContent: 'space-around',
 }));
-
-const BoxImage = styled(Box)(() => ({
-    display: 'grid',
-    placeItems: 'center',
-}));
-
-const StyledImage = {
-    backgroundColor: 'rgb(234, 245, 247)',
-};
 
 const BoxLogin = styled(Box)(() => ({
     display: 'flex',
@@ -86,11 +74,6 @@ const ForgotButton = styled(Button)(() => ({
     textTransform: 'capitalize',
 }));
 
-const SignUpText = styled(Typography)(() => ({
-    top: '80px',
-    fontSize: 'small',
-}));
-
 export const Login = () => {
     const [open, setOpen] = React.useState(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false); // untuk Snackbar
@@ -121,7 +104,6 @@ export const Login = () => {
                         setSnackbarMessage('Login berhasil');
                         setSnackbarOpen(true);
                         setTimeout(() => {
-                            // navigate('/dashboard');
                             location.href = '/'; // server side redirect to affect router authorization
                         }, 1500);
                     } else {
@@ -165,13 +147,6 @@ export const Login = () => {
         <StyledBox>
             <StyledPaper>
                 <StyledGrid container>
-                    <BoxImage>
-                        <img
-                            src="/images/logo-ira.png"
-                            alt="Logo"
-                            style={StyledImage}
-                        />
-                    </BoxImage>
                     <form
                         action=""
                         method="post"
@@ -251,23 +226,9 @@ export const Login = () => {
                             >
                                 Lupa Password?
                             </ForgotButton>
-                            <SignUpText component="span">
-                                Belum punya akun?
-                                <Link
-                                    component={RouterLink}
-                                    to="/welcome"
-                                    underline="hover"
-                                    color="black"
-                                >
-                                    Daftar
-                                </Link>
-                            </SignUpText>
                         </BoxLogin>
                     </form>
                 </StyledGrid>
-                <Link component={RouterLink} to="/welcome">
-                    To welcome page
-                </Link>
             </StyledPaper>
         </StyledBox>
     );
