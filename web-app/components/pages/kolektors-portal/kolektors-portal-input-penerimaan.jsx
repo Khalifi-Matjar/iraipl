@@ -15,6 +15,7 @@ import { Button, Divider, Typography } from '@mui/material';
 import { KolektorsPortalSearchPendudukDrawer } from './kolektors-portal-search-penduduk-drawer';
 import { SnackbarContext } from '../../context/snackbar-context';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
+import { KolektorsPortalContext } from './kolektors-portal-page';
 
 export const KolektorsPortalInputPenerimaan = () => {
     const [confirmModalProps, setConfirmModalProps] = useState(
@@ -102,6 +103,8 @@ export const KolektorsPortalInputPenerimaan = () => {
         periodYear: '',
     });
 
+    const kolektorsPortalContext = useContext(KolektorsPortalContext);
+
     const formSubmitDefinition = {
         label: 'Simpan penerimaan iuran',
         isFullWidthButton: true,
@@ -130,11 +133,16 @@ export const KolektorsPortalInputPenerimaan = () => {
                                 Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
                             },
                         })
-                            .then(() => {
+                            .then((response) => {
                                 snackbar.setOpen(true);
                                 snackbar.setType('success');
                                 snackbar.setMessage(
                                     'Data penerimaan iuran telah disimpan'
+                                );
+
+                                console.log('resp', response);
+                                kolektorsPortalContext.printReceipt(
+                                    response.data.metadata.penerimaan.id
                                 );
 
                                 /** clear form input and choosen penduduk */

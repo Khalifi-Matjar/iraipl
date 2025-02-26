@@ -94,6 +94,13 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                 </Stack>
             </Stack>
             <StyledFloatingFunctionButton>
+                <div>
+                    <Chip
+                        label={formatDate(penerimaan.transactionDate)}
+                        color="success"
+                        size="small"
+                    />
+                </div>
                 <IconButton
                     color="warning"
                     size="large"

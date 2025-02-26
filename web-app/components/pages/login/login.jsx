@@ -40,15 +40,6 @@ const StyledGrid = styled(Grid)(() => ({
     justifyContent: 'space-around',
 }));
 
-const BoxImage = styled(Box)(() => ({
-    display: 'grid',
-    placeItems: 'center',
-}));
-
-const StyledImage = {
-    backgroundColor: 'rgb(234, 245, 247)',
-};
-
 const BoxLogin = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'column',
@@ -164,13 +155,6 @@ export const Login = () => {
         <StyledBox>
             <StyledPaper>
                 <StyledGrid container>
-                    <BoxImage>
-                        <img
-                            src="/images/logo-ira.png"
-                            alt="Logo"
-                            style={StyledImage}
-                        />
-                    </BoxImage>
                     <form
                         action=""
                         method="post"

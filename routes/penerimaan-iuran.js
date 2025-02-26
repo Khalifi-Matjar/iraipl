@@ -72,6 +72,7 @@ router.get('/find', async function (req, res, _next) {
                 order: [
                     ['transactionDate', 'ASC'],
                     [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
+                    ['createdAt', 'ASC'],
                 ],
             });
 
@@ -129,7 +130,7 @@ router.post('/add', async function (req, res, _next) {
         } = req.body;
 
         try {
-            await db.PenerimaanIuran.create({
+            const penerimaan = await db.PenerimaanIuran.create({
                 transactionDate,
                 amount,
                 iuranId,
@@ -148,6 +149,7 @@ router.post('/add', async function (req, res, _next) {
                 metadata: {
                     findUser,
                     body: req.body,
+                    penerimaan,
                 },
             };
         } catch (error) {
