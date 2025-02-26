@@ -1,19 +1,16 @@
 import {
     Box,
     styled,
-    Typography,
     Paper,
     Grid,
     TextField,
     Button,
     InputAdornment,
-    Link,
     Backdrop,
     CircularProgress,
     Snackbar,
 } from '@mui/material';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import { useFormik } from 'formik';
@@ -75,11 +72,6 @@ const LoginButton = styled(Button)(() => ({
 const ForgotButton = styled(Button)(() => ({
     color: 'gray',
     textTransform: 'capitalize',
-}));
-
-const SignUpText = styled(Typography)(() => ({
-    top: '80px',
-    fontSize: 'small',
 }));
 
 export const Login = () => {
@@ -234,23 +226,9 @@ export const Login = () => {
                             >
                                 Lupa Password?
                             </ForgotButton>
-                            <SignUpText component="span">
-                                Belum punya akun?
-                                <Link
-                                    component={RouterLink}
-                                    to="/welcome"
-                                    underline="hover"
-                                    color="black"
-                                >
-                                    Daftar
-                                </Link>
-                            </SignUpText>
                         </BoxLogin>
                     </form>
                 </StyledGrid>
-                <Link component={RouterLink} to="/welcome">
-                    To welcome page
-                </Link>
             </StyledPaper>
         </StyledBox>
     );
