@@ -6,5 +6,13 @@
         "host": "localhost",
         "dialect": "mysql",
         "port": "4417"
+    },
+    "production": {
+        "username": "iraipl",
+        "password": "iraipl",
+        "database": "iraipl",
+        "host": "localhost",
+        "dialect": "mysql",
+        "port": "4417"
     }
 }
