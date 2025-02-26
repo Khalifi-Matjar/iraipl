@@ -15,7 +15,17 @@ import {
 import React, { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { GridViewOutlined } from '@mui/icons-material';
+import {
+    AssignmentIndOutlined,
+    GroupsOutlined,
+    LogoutOutlined,
+    ManageAccountsOutlined,
+    Person4Outlined,
+    PersonOutlined,
+    ReceiptLongOutlined,
+    ReceiptOutlined,
+    RuleOutlined,
+} from '@mui/icons-material';
 import { ConfirmationContext } from '../../context/confirmation-context';
 import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
 
@@ -133,7 +143,8 @@ export const Sidebar = () => {
                             to="/master-iuran"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                {/* <GridViewOutlined fontSize="small" /> */}
+                                <ReceiptLongOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText
                                 color=""
@@ -147,7 +158,8 @@ export const Sidebar = () => {
                             to="/penduduk"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                {/* <GridViewOutlined fontSize="small" /> */}
+                                <GroupsOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText color="" primary="Penduduk" />
                         </StyledListItemButton>
@@ -158,7 +170,8 @@ export const Sidebar = () => {
                             to="/kolektor"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                {/* <GridViewOutlined fontSize="small" /> */}
+                                <Person4Outlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText color="" primary="Kolektor" />
                         </StyledListItemButton>
@@ -169,7 +182,6 @@ export const Sidebar = () => {
                     sx={{ marginTop: '10px' }}
                     subheader={
                         <StyledListSubheader>
-                            {' '}
                             PENERIMAAN IURAN
                         </StyledListSubheader>
                     }
@@ -180,7 +192,7 @@ export const Sidebar = () => {
                             to="/penerimaan-iuran-kolektor"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <Person4Outlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Dengan Kolektor" />
                         </StyledListItemButton>
@@ -191,7 +203,7 @@ export const Sidebar = () => {
                             to="/penerimaan-iuran-non-kolektor"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <PersonOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Tanpa Kolektor" />
                         </StyledListItemButton>
@@ -202,7 +214,7 @@ export const Sidebar = () => {
                             to="/penerimaan-iuran-validasi"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <RuleOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Validasi" />
                         </StyledListItemButton>
@@ -220,7 +232,7 @@ export const Sidebar = () => {
                             to="/laporan-penerimaan-iuran"
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <ReceiptOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Penerimaan Iuran" />
                         </StyledListItemButton>
@@ -233,7 +245,7 @@ export const Sidebar = () => {
                     <StyledListItem disablePadding>
                         <StyledListItemButton>
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <ManageAccountsOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Manage User" />
                         </StyledListItemButton>
@@ -241,7 +253,7 @@ export const Sidebar = () => {
                     <StyledListItem disablePadding>
                         <StyledListItemButton>
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <AssignmentIndOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Ubah Profil" />
                         </StyledListItemButton>
@@ -264,7 +276,7 @@ export const Sidebar = () => {
                             }}
                         >
                             <ListItemIcon>
-                                <GridViewOutlined fontSize="small" />
+                                <LogoutOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Logout" />
                         </StyledListItemButton>
