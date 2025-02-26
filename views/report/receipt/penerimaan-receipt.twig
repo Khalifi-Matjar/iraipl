@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+    <head>
+        <title>IRA IPL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style type="text/css">
+            @media print {
+                .button-print {
+                    display: none;
+                }
+
+                body {
+                    font-size: 300%;
+                }
+            }
+            @page {
+                margin: 0;
+            }
+            body {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+            }
+            .button-print {
+                position: fixed;
+                top: 0;
+                right: 0;
+                padding: 10px;
+            }
+
+            .highlight1 {
+                font-weight: bold;
+                font-size: 200%;
+            }
+
+            .highlight2 {
+                font-weight: bold;
+                font-size: 120%;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <button class="button-print" onclick="window.print();">
+                Cetak
+            </button>
+            <strong
+                >Tgl: {{penerimaanIuran.transactionDate|date('d-m-Y')}}</strong
+            >
+            <hr />
+            <strong>Telah Terima dari:</strong><br />
+            {{ penerimaanIuran.Penduduk.pic }}<br />
+            {{ penerimaanIuran.Penduduk.address }}<br />
+            {{ penerimaanIuran.Penduduk.Perumahan.perumahan }}<br />
+            <hr />
+            <strong>Untuk pembayaran:</strong><br />
+            <span class="highlight2">{{
+                penerimaanIuran.MasterIuran.iuranName
+            }}</span
+            ><br />
+            bulan {{ penerimaanIuran.periodStart }} s/d
+            {{ penerimaanIuran.periodEnd }}
+            <hr />
+            <span class="highlight1"
+                >Rp. {{ penerimaanIuran.amount|number_format(2) }}</span
+            ><br />
+            kolektor: <i>{{ penerimaanIuran.Kolektor.name }}</i>
+        </div>
+    </body>
+</html>

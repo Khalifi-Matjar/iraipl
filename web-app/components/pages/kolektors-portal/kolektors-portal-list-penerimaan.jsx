@@ -20,9 +20,11 @@ import {
     Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PrintIcon from '@mui/icons-material/Print';
 import PropTypes from 'prop-types';
 import { monthList } from '../../../utils/constants';
 import { ConfirmationContext } from '../../context/confirmation-context';
+import { KolektorsPortalContext } from './kolektors-portal-page';
 
 const StyledLink = styled('a')(() => ({
     background: 'transparent',
@@ -39,6 +41,7 @@ const StyledFloatingFunctionButton = styled('div')(() => ({
 }));
 
 const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
+    const kolektorsPortalContext = useContext(KolektorsPortalContext);
     const confirmation = useContext(ConfirmationContext);
     const onDeleteClick = (e) => {
         e.stopPropagation();
@@ -97,6 +100,18 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                     onClick={onDeleteClick}
                 >
                     <DeleteIcon />
+                </IconButton>
+
+                <IconButton
+                    color="primary"
+                    size="large"
+                    // target="_blank"
+                    // href={`/report/penerimaan-iuran/receipt?id=${penerimaan.id}`}
+                    onClick={() => {
+                        kolektorsPortalContext.printReceipt(penerimaan.id);
+                    }}
+                >
+                    <PrintIcon />
                 </IconButton>
             </StyledFloatingFunctionButton>
         </Box>
