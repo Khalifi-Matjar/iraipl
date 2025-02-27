@@ -219,13 +219,6 @@ export const Login = () => {
                                     horizontal: 'right',
                                 }}
                             />
-                            <ForgotButton
-                                variant="text"
-                                size="medium"
-                                disableElevation
-                            >
-                                Lupa Password?
-                            </ForgotButton>
                         </BoxLogin>
                     </form>
                 </StyledGrid>
