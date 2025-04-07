@@ -69,11 +69,6 @@ const LoginButton = styled(Button)(() => ({
     textTransform: 'capitalize',
 }));
 
-const ForgotButton = styled(Button)(() => ({
-    color: 'gray',
-    textTransform: 'capitalize',
-}));
-
 export const Login = () => {
     const [open, setOpen] = React.useState(false);
     const [snackbarOpen, setSnackbarOpen] = React.useState(false); // untuk Snackbar

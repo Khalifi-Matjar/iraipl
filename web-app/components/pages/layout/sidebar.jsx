@@ -16,7 +16,6 @@ import React, { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
-    AssignmentIndOutlined,
     GroupsOutlined,
     LogoutOutlined,
     ManageAccountsOutlined,
@@ -243,19 +242,14 @@ export const Sidebar = () => {
                     subheader={<StyledListSubheader> USER</StyledListSubheader>}
                 >
                     <StyledListItem disablePadding>
-                        <StyledListItemButton>
+                        <StyledListItemButton
+                            LinkComponent={RouterLink}
+                            to="/manage-user"
+                        >
                             <ListItemIcon>
                                 <ManageAccountsOutlined fontSize="small" />
                             </ListItemIcon>
                             <StyledListItemText primary="Manage User" />
-                        </StyledListItemButton>
-                    </StyledListItem>
-                    <StyledListItem disablePadding>
-                        <StyledListItemButton>
-                            <ListItemIcon>
-                                <AssignmentIndOutlined fontSize="small" />
-                            </ListItemIcon>
-                            <StyledListItemText primary="Ubah Profil" />
                         </StyledListItemButton>
                     </StyledListItem>
                     <StyledListItem disablePadding>

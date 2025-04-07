@@ -10,6 +10,7 @@ import {
     Penduduk,
     PenerimaanIuran,
     PenerimaanIuranType,
+    Users,
     Welcome,
 } from '../components';
 import { PenerimaanIuranValidasi } from '../components/pages/penerimaan-iuran/penerimaan-iuran-validasi';
@@ -124,6 +125,10 @@ export const routesDefinitions = [
             {
                 path: '/laporan-penerimaan-iuran',
                 element: <LaporanPenerimaanIuran />,
+            },
+            {
+                path: '/manage-user',
+                element: <Users />,
             },
         ],
     },
