@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import {
     deleteRetribution,
@@ -9,8 +9,10 @@ import {
 import { Button } from '@mui/material';
 import { formatDate, formatMoney } from '../../../utils';
 import { listData as listIuranData } from '../master-iuran/master-iuran-functions';
+import { SpinnerContext } from '../../context/spinner-context';
 
 export const usePenduduk = (activeOnly = false) => {
+    const pageSpinner = useContext(SpinnerContext);
     const [pendudukId, setPendudukId] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [formValue, setFormValue] = useState({});
@@ -240,13 +242,21 @@ export const usePenduduk = (activeOnly = false) => {
     );
 
     const filterPenduduk = (filter) => {
-        listPenduduk((penduduk) => void setPendudukTblRows(penduduk), {
-            isActive: true,
-            ...filter,
-        });
+        pageSpinner.setOpen(true);
+        listPenduduk(
+            (penduduk) => {
+                setPendudukTblRows(penduduk);
+                pageSpinner.setOpen(false);
+            },
+            {
+                isActive: true,
+                ...filter,
+            }
+        );
     };
 
     useEffect(() => {
+        pageSpinner.setOpen(true);
         // Get list all penduduk
         listPenduduk(
             (penduduk) => {
@@ -258,6 +268,7 @@ export const usePenduduk = (activeOnly = false) => {
 
                     // Get list all perumahan
                     listPerumahan((perumahan) => setPerumahan(perumahan));
+                    pageSpinner.setOpen(false);
                 });
             },
             activeOnly ? { isActive: true } : undefined

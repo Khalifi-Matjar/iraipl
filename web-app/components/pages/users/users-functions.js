@@ -32,3 +32,12 @@ export const updateUserNonKolektor = (
             Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
         },
     });
+
+export const findUserDetails = () =>
+    axios({
+        method: 'get',
+        url: '/api/authentication/get-user-details',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+        },
+    });
