@@ -20,19 +20,26 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
-
+// import iraLogo from '../../../../public/images/LogoPengelola.jpg';
+// import { background } from 'storybook/internal/theming';
+// const iraLogo = require('../../../../public/images/LogoPengelola.jpg');
 const StyledBox = styled(Box)(() => ({
     width: '100dvw',
     height: '100dvh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f4f4f4',
+
+    // backgroundColor: '#f4f4f4',
+    // backgroundImage: `url(${iraLogo})`,
+    // backgroundColor: 'red',
 }));
 
 const StyledPaper = styled(Paper)(() => ({
     padding: '20px',
     width: '690px',
+    backgroundColor: 'rgb(225, 233, 232)',
+    borderRadius: '15px',
 }));
 
 const StyledGrid = styled(Grid)(() => ({
@@ -47,6 +54,7 @@ const BoxImage = styled(Box)(() => ({
 
 const StyledImage = {
     backgroundColor: 'rgb(234, 245, 247)',
+    width: '200px',
 };
 
 const BoxLogin = styled(Box)(() => ({
@@ -163,11 +171,22 @@ export const Login = () => {
 
     return (
         <StyledBox>
+            <img
+                src="/images/bgira2.jpg"
+                alt=""
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    zIndex: -1,
+                }}
+            />
             <StyledPaper>
                 <StyledGrid container>
                     <BoxImage>
                         <img
-                            src="/images/logo-ira.png"
+                            src="/images/LogoPengelola.jpg"
                             alt="Logo"
                             style={StyledImage}
                         />
