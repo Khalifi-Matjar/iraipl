@@ -12,7 +12,7 @@ import {
     IconButton,
     Divider,
 } from '@mui/material';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
@@ -27,6 +27,7 @@ import {
 } from '@mui/icons-material';
 import { ConfirmationContext } from '../../context/confirmation-context';
 import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
+import { findUserDetails } from '../users/users-functions';
 
 const StyledBox = styled(Box)(() => ({
     width: '16.0dvw',
@@ -105,25 +106,39 @@ const StyledListItemText = styled(ListItemText)(() => ({
 }));
 
 export const Sidebar = () => {
+    const [userDetails, setUserDetails] = useState(null);
+
+    useEffect(() => {
+        findUserDetails()
+            .then((userDetails) => {
+                setUserDetails(userDetails.data.findUser);
+            })
+            .catch(() => {
+                setUserDetails(null);
+            });
+    }, []);
+
     const confirmation = useContext(ConfirmationContext);
     return (
         <StyledBox>
             <ProfileBox>
-                <StyledPhoto>A</StyledPhoto>
+                <StyledPhoto>
+                    {userDetails?.name?.substring(0, 1) ?? ''}
+                </StyledPhoto>
                 <NameDetails>
                     <StyledName
                         variant="subtitle1"
                         fontSize="medium"
                         fontWeight="bold"
                     >
-                        Administrator
+                        {userDetails?.name ?? 'loading...'}
                     </StyledName>
                     <StyledEmail
                         variant="caption"
                         fontWeight="thin"
                         color="grey"
                     >
-                        admin@dev
+                        {userDetails?.email ?? 'loading...'}
                     </StyledEmail>
                 </NameDetails>
                 <MoreButton>
