@@ -3,7 +3,6 @@ var router = express.Router();
 const db = require('../database/models');
 const { Op } = require('sequelize');
 
-/* GET home page. */
 router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
     const { from, to } = req.query;
     const penerimaanIuran = await db.PenerimaanIuran.findAll({
@@ -88,6 +87,36 @@ FROM
         from,
         to,
         debug: JSON.stringify(rekapPenerimaanKolektor),
+    });
+});
+
+router.get('/receipt', async function (req, res, next) {
+    const { id } = req.query;
+
+    const penerimaanIuran = await db.PenerimaanIuran.findByPk(id, {
+        include: [
+            {
+                model: db.MasterIuran,
+            },
+            {
+                model: db.Kolektor,
+            },
+            {
+                model: db.PenerimaanIuranValidasi,
+            },
+            {
+                model: db.Penduduk,
+                include: [
+                    {
+                        model: db.Perumahan,
+                    },
+                ],
+            },
+        ],
+    });
+
+    res.render('report/receipt/penerimaan-receipt', {
+        penerimaanIuran,
     });
 });
 

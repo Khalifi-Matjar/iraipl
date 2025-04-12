@@ -72,6 +72,7 @@ router.get('/find', async function (req, res, _next) {
                 order: [
                     ['transactionDate', 'ASC'],
                     [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
+                    ['createdAt', 'ASC'],
                 ],
             });
 
@@ -122,20 +123,22 @@ router.post('/add', async function (req, res, _next) {
             iuranId,
             pendudukId,
             kolektorId,
-            periodMonth,
-            periodYear,
+            periodStart,
+            periodEnd,
+            paymentType,
             summary,
         } = req.body;
 
         try {
-            await db.PenerimaanIuran.create({
+            const penerimaan = await db.PenerimaanIuran.create({
                 transactionDate,
                 amount,
                 iuranId,
                 pendudukId,
                 kolektorId: isAddByKolektor ? findUser.Kolektor.id : kolektorId,
-                periodMonth,
-                periodYear,
+                periodStart,
+                periodEnd,
+                paymentType,
                 summary,
             });
 
@@ -146,6 +149,7 @@ router.post('/add', async function (req, res, _next) {
                 metadata: {
                     findUser,
                     body: req.body,
+                    penerimaan,
                 },
             };
         } catch (error) {

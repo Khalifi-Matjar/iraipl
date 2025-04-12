@@ -15,12 +15,12 @@ import { SnackbarContext } from '../../context/snackbar-context';
 import { LocalTable } from '../../organisms/local-table';
 import { PendudukCard } from '../../organisms/penduduk-card';
 import { TabLayoutContext } from '../../organisms/tab-layout';
-import { monthList } from '../../../utils/constants';
 import { usePenduduk } from '../penduduk/penduduk-hooks';
 import {
     PenerimaanIuranPageContext,
     PenerimaanIuranType,
 } from './penerimaan-iuran-page';
+import { paymentType } from '../../../utils/constants';
 import { ConfirmationContext } from '../../context/confirmation-context';
 
 export const PenerimaanIuranFormInput = ({ kolektor }) => {
@@ -44,7 +44,7 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                 name: 'iuranId',
                 id: 'iuranId',
                 label: 'Nama Iuran',
-                gridColumn: 6,
+                gridColumn: 3,
                 options: jenisIuran
                     .filter(
                         ({ requireCollector }) =>
@@ -69,6 +69,22 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                 ),
             },
             {
+                name: 'periodStart',
+                id: 'periodStart',
+                label: 'Periode awal',
+                gridColumn: 3,
+                type: 'month',
+                validationSchema: Yup.string().required('Pilih periode awal'),
+            },
+            {
+                name: 'periodEnd',
+                id: 'periodEnd',
+                label: 'Periode akhir',
+                gridColumn: 3,
+                type: 'month',
+                validationSchema: Yup.string().required('Pilih periode akhir'),
+            },
+            {
                 name: 'transactionDate',
                 id: 'transactionDate',
                 label: 'Tgl. transaksi',
@@ -85,33 +101,27 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                     label: name,
                     value: id,
                 })),
-                validationSchema: Yup.string().required('Pilih kolektor'),
             },
             {
-                name: 'periodMonth',
-                id: 'periodeMonth',
-                label: 'Bulan periode',
-                gridColumn: 3,
-                options: monthList.map(({ monthName, monthNumber }) => ({
-                    label: monthName,
-                    value: monthNumber,
+                name: 'paymentType',
+                id: 'paymentType',
+                label: 'Tipe pembayaran',
+                gridColumn: 4,
+                options: paymentType.map((paymentType) => ({
+                    label: paymentType,
+                    value: paymentType,
                 })),
-                validationSchema: Yup.string().required('Pilih bulan periode'),
-            },
-            {
-                name: 'periodYear',
-                id: 'periodeYear',
-                label: 'Tahun periode',
-                gridColumn: 3,
-                type: 'number',
-                validationSchema: Yup.string().required('Pilih bulan periode'),
+                optionsFieldType: 'radio',
+                validationSchema: Yup.string().required(
+                    'Pilih tipe pembayaran'
+                ),
             },
         ];
 
         if (penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR) {
             return baseDefinition;
         } else {
-            delete baseDefinition[3]; // remove kolektorId input from definition
+            delete baseDefinition[5]; // remove kolektorId input from definition
 
             return baseDefinition;
         }
@@ -125,14 +135,15 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
             penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR
                 ? ''
                 : undefined,
-        periodMonth: '',
-        periodYear: '',
+        periodStart: '',
+        periodEnd: '',
     });
 
     const formSubmitDefinition = useMemo(
         () => ({
             label: 'Simpan data iuran',
             onSubmit: (value) => {
+                console.log('submit', value);
                 confirmation.setTitle('Simpan data penerimaan iuran');
                 confirmation.setMessage(
                     'Anda yakin akan menyimpan data penerimaan iuran ini?'

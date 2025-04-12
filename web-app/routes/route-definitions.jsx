@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
     Dashboard,
     Kolektor,
@@ -10,44 +9,16 @@ import {
     Penduduk,
     PenerimaanIuran,
     PenerimaanIuranType,
+    Users,
     Welcome,
 } from '../components';
 import { PenerimaanIuranValidasi } from '../components/pages/penerimaan-iuran/penerimaan-iuran-validasi';
-import { LOCAL_STORAGE_TOKEN_KEY } from '../utils';
 import isNull from 'lodash/isNull';
 import { Navigate, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { findUserDetails } from '../components/pages/users/users-functions';
 
 const KOLEKTOR_ROLE_ID = 5;
-
-const findUserDetails = () =>
-    axios({
-        method: 'get',
-        url: '/api/authentication/get-user-details',
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
-        },
-    });
-
-// const Authenticator = () => {
-//     const [isAuthenticated, setIsAuthenticated] = useState(null);
-
-//     useEffect(() => {
-//         findUserDetails()
-//             .then(() => setIsAuthenticated(true))
-//             .catch(() => setIsAuthenticated(false));
-//     }, []);
-
-//     if (isNull(isAuthenticated)) {
-//         return 'Authenticating';
-//     } else {
-//         if (isAuthenticated) {
-//             return <Outlet />;
-//         } else {
-//             return <Navigate to="/login" />;
-//         }
-//     }
-// };
 
 const Authorizer = ({ isHomePath = false, isAuthorizeForKolektor }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -144,6 +115,10 @@ export const routesDefinitions = [
             {
                 path: '/laporan-penerimaan-iuran',
                 element: <LaporanPenerimaanIuran />,
+            },
+            {
+                path: '/manage-user',
+                element: <Users />,
             },
         ],
     },

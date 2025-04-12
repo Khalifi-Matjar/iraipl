@@ -1,33 +1,21 @@
 import {
+    Accordion,
+    AccordionActions,
+    AccordionDetails,
+    AccordionSummary,
     Alert,
     Button,
-    Card,
-    CardActions,
-    CardContent,
     Grid,
-    styled,
     TextField,
     Typography,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import noop from 'lodash/noop';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { formatDate, formatMoney } from '../../utils';
 import { monthList } from '../../utils/constants';
 import { PendudukCard } from './penduduk-card';
-
-const StyledDiv = styled('div')(() => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '10px',
-}));
-
-const StyledCard = styled(Card)(() => ({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-}));
 
 export const PenerimaanIuranCard = ({
     penerimaanIuran,
@@ -36,18 +24,24 @@ export const PenerimaanIuranCard = ({
     onDelete = noop,
     onValidateAccept = noop,
 }) => {
-    const periodMonth = !penerimaanIuran
-        ? ''
-        : monthList[penerimaanIuran.periodMonth - 1].monthName;
-    const periodYear = !penerimaanIuran ? '' : penerimaanIuran.periodYear;
+    const [yearStart, monthStart] =
+        penerimaanIuran?.periodStart?.split('-') ?? [];
+    const [yearEnd, monthEnd] = penerimaanIuran?.periodEnd?.split('-') ?? [];
+    const periodMonthStart = monthList[parseInt(monthStart) - 1]?.monthName;
+    const periodMonthEnd = monthList[parseInt(monthEnd) - 1]?.monthName;
 
     return penerimaanIuran ? (
-        <StyledDiv>
+        <>
             <PendudukCard penduduk={penerimaanIuran.Penduduk} />
-            <StyledCard variant="outlined">
-                <CardContent>
+            <Accordion sx={{ width: '100%' }}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                >
                     <Typography variant="h6">Data Penerimaan Iuran</Typography>
-                    <br />
+                </AccordionSummary>
+                <AccordionDetails>
                     <Grid container spacing={2}>
                         <Grid item xs={4}>
                             <TextField
@@ -81,12 +75,12 @@ export const PenerimaanIuranCard = ({
                                 variant="standard"
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={3}>
                             <TextField
                                 disabled
                                 fullWidth
-                                label="Periode"
-                                value={`${periodMonth} ${periodYear}`}
+                                label="Bayar untuk"
+                                value={`${periodMonthStart} ${yearStart} S/D ${periodMonthEnd} ${yearEnd}`}
                                 variant="standard"
                             />
                         </Grid>
@@ -99,9 +93,18 @@ export const PenerimaanIuranCard = ({
                                 variant="standard"
                             />
                         </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                disabled
+                                fullWidth
+                                label="Metode pembayaran"
+                                value={penerimaanIuran.paymentType}
+                                variant="standard"
+                            />
+                        </Grid>
                     </Grid>
-                </CardContent>
-                <CardActions>
+                </AccordionDetails>
+                <AccordionActions>
                     {hasDeleteButton && (
                         <Button
                             size="small"
@@ -113,29 +116,20 @@ export const PenerimaanIuranCard = ({
                         </Button>
                     )}
                     {hasValidateButton && (
-                        <>
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                color="success"
-                                onClick={() =>
-                                    void onValidateAccept(penerimaanIuran.id)
-                                }
-                            >
-                                Validasi Terima
-                            </Button>
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                color="error"
-                            >
-                                Validasi Tolak
-                            </Button>
-                        </>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            color="success"
+                            onClick={() =>
+                                void onValidateAccept(penerimaanIuran.id)
+                            }
+                        >
+                            Validasi Terima
+                        </Button>
                     )}
-                </CardActions>
-            </StyledCard>
-        </StyledDiv>
+                </AccordionActions>
+            </Accordion>
+        </>
     ) : (
         <Alert severity="info" sx={{ width: '100%' }}>
             Tidak ada data penerimaan iuran yang dipilih

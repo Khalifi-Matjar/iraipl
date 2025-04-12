@@ -32,8 +32,9 @@ module.exports = (sequelize, DataTypes) => {
             iuranId: DataTypes.STRING,
             pendudukId: DataTypes.STRING,
             kolektorId: DataTypes.STRING,
-            periodMonth: DataTypes.STRING,
-            periodYear: DataTypes.STRING,
+            periodStart: DataTypes.STRING,
+            periodEnd: DataTypes.STRING,
+            paymentType: DataTypes.STRING,
             summary: DataTypes.STRING,
         },
         {

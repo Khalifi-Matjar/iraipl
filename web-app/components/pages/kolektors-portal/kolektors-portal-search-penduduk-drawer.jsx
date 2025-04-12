@@ -23,7 +23,9 @@ const PendudukSearchItem = ({ penduduk }) => {
             <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
                 <Avatar>{getInitialName(penduduk.pic)}</Avatar>
                 <Stack>
-                    <Typography variant="subtitle1">{penduduk.pic}</Typography>
+                    <Typography variant="subtitle1">
+                        {penduduk.pic || '-'}
+                    </Typography>
                     <Typography variant="subtitle2">
                         {penduduk.address}
                     </Typography>
@@ -84,6 +86,7 @@ export const KolektorsPortalSearchPendudukDrawer = ({
     const pendudukSearchSubmitDef = {
         label: 'Cari data penduduk',
         onSubmit: (value) => {
+            console.log('value fil', value);
             filterPenduduk(value);
         },
     };
