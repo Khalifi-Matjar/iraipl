@@ -6,7 +6,7 @@
         "prod": "NODE_ENV=production npm run prod-prep",
         "prod-prep": "npm run build-web-app && dotenvx run --env-file=.env -- pm2 start ./bin/www",
         "dev": "nodemon --ext js,jsx,css,scss,json,twig --ignore \"public/javascripts/\" --exec \"npx eslint web-app && npm run build-web-app && dotenvx run --env-file=.env.development -- node ./bin/www\"",
-        "build-web-app": "esbuild web-app/index.js --bundle --minify --outfile=public/javascripts/web-app.js --loader:.js=jsx --loader:.woff=file --loader:.woff2=file",
+        "build-web-app": "esbuild web-app/index.js --bundle --outfile=public/javascripts/web-app.js --loader:.js=jsx --loader:.woff=file --loader:.woff2=file",
         "db:migrate:create": "npx sequelize-cli migration:generate --name ",
         "db:migrate:up": "npx sequelize-cli db:migrate",
         "db-prod:migrate:up": "NODE_ENV=production npx sequelize-cli db:migrate",

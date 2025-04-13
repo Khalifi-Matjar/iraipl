@@ -9,7 +9,9 @@ import {
     Backdrop,
     CircularProgress,
     Snackbar,
+    IconButton,
 } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
 import React from 'react';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
@@ -17,6 +19,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
+import { VisibilityOff } from '@mui/icons-material';
 // import iraLogo from '../../../../public/images/LogoPengelola.jpg';
 // import { background } from 'storybook/internal/theming';
 // const iraLogo = require('../../../../public/images/LogoPengelola.jpg');
@@ -33,7 +36,7 @@ const StyledBox = styled(Box)(() => ({
 }));
 
 const StyledPaper = styled(Paper)(() => ({
-    padding: '20px',
+    padding: '40px 20px',
     width: '690px',
     backgroundColor: 'rgb(225, 233, 232)',
     borderRadius: '15px',
@@ -91,6 +94,13 @@ export const Login = () => {
     const [snackbarOpen, setSnackbarOpen] = React.useState(false); // untuk Snackbar
     const [snackbarMessage, setSnackbarMessage] = React.useState(''); // pesan untuk Snackbar
 
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -210,7 +220,7 @@ export const Login = () => {
                                 label="Password"
                                 placeholder="Password"
                                 name="password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 onChange={formik.handleChange}
                                 value={formik.values.password}
                                 InputProps={{
@@ -219,8 +229,30 @@ export const Login = () => {
                                             <LockRoundedIcon fontSize="medium" />
                                         </InputAdornment>
                                     ),
+                                    //visibility password icon
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={
+                                                    handleClickShowPassword
+                                                }
+                                                onMouseDown={
+                                                    handleMouseDownPassword
+                                                }
+                                                edge="end"
+                                            >
+                                                {showPassword ? (
+                                                    <VisibilityOff />
+                                                ) : (
+                                                    <Visibility />
+                                                )}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
                                 }}
                             />
+
                             <LoginButton
                                 variant="contained"
                                 size="medium"
