@@ -162,7 +162,7 @@ export const usePenduduk = (activeOnly = false) => {
                     value: id,
                     label: iuranName,
                 })),
-                validationSchema: Yup.number().required('Pilih jenis iuran'),
+                validationSchema: Yup.string().required('Pilih jenis iuran'),
             },
             {
                 name: 'amount',

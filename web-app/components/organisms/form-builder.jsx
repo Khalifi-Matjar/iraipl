@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import omit from 'lodash/omit';
 import { useFormik } from 'formik';
+import { NumericFormat } from 'react-number-format';
 import Grid from '@mui/material/Grid';
 import {
     Button,
@@ -17,6 +18,32 @@ import {
     Stack,
     TextField,
 } from '@mui/material';
+
+const NumericField = forwardRef(({ onChange, name, ...other }, ref) => (
+    <NumericFormat
+        getInputRef={ref}
+        onValueChange={(values) => {
+            onChange({
+                target: {
+                    name,
+                    value: values.value,
+                },
+            });
+        }}
+        allowLeadingZeros
+        thousandSeparator="."
+        decimalSeparator=","
+        valueIsNumericString
+        {...other}
+    />
+));
+
+NumericField.propTypes = {
+    onChange: PropTypes.func,
+    name: PropTypes.string,
+};
+
+NumericField.displayName = 'NumericField';
 
 const InputBox = ({
     label,
@@ -57,7 +84,19 @@ const InputBox = ({
                     error={error}
                     label={label}
                     helperText={(error ? errorInfo : undefined) ?? helperText}
+                    InputProps={
+                        formAttributes.type === 'number'
+                            ? {
+                                  inputComponent: NumericField,
+                              }
+                            : undefined
+                    }
                     {...formAttributes}
+                    type={
+                        formAttributes.type === 'number'
+                            ? undefined
+                            : formAttributes.type
+                    }
                 >
                     {options &&
                         options.map(({ value, label }, index) => (
