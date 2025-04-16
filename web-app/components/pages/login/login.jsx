@@ -9,7 +9,9 @@ import {
     Backdrop,
     CircularProgress,
     Snackbar,
+    IconButton,
 } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
 import React from 'react';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
@@ -17,25 +19,43 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
-
+import { VisibilityOff } from '@mui/icons-material';
+// import iraLogo from '../../../../public/images/LogoPengelola.jpg';
+// import { background } from 'storybook/internal/theming';
+// const iraLogo = require('../../../../public/images/LogoPengelola.jpg');
 const StyledBox = styled(Box)(() => ({
     width: '100dvw',
     height: '100dvh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f4f4f4',
+
+    // backgroundColor: '#f4f4f4',
+    // backgroundImage: `url(${iraLogo})`,
+    // backgroundColor: 'red',
 }));
 
 const StyledPaper = styled(Paper)(() => ({
-    padding: '20px',
+    padding: '40px 20px',
     width: '690px',
+    backgroundColor: 'rgb(225, 233, 232)',
+    borderRadius: '15px',
 }));
 
 const StyledGrid = styled(Grid)(() => ({
     display: 'flex',
     justifyContent: 'space-around',
 }));
+
+const BoxImage = styled(Box)(() => ({
+    display: 'grid',
+    placeItems: 'center',
+}));
+
+const StyledImage = {
+    backgroundColor: 'rgb(234, 245, 247)',
+    width: '200px',
+};
 
 const BoxLogin = styled(Box)(() => ({
     display: 'flex',
@@ -74,6 +94,13 @@ export const Login = () => {
     const [snackbarOpen, setSnackbarOpen] = React.useState(false); // untuk Snackbar
     const [snackbarMessage, setSnackbarMessage] = React.useState(''); // pesan untuk Snackbar
 
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -140,8 +167,26 @@ export const Login = () => {
 
     return (
         <StyledBox>
+            <img
+                src="/images/bgira2.jpg"
+                alt=""
+                style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    zIndex: -1,
+                }}
+            />
             <StyledPaper>
                 <StyledGrid container>
+                    <BoxImage>
+                        <img
+                            src="/images/LogoPengelola.jpg"
+                            alt="Logo"
+                            style={StyledImage}
+                        />
+                    </BoxImage>
                     <form
                         action=""
                         method="post"
@@ -175,7 +220,7 @@ export const Login = () => {
                                 label="Password"
                                 placeholder="Password"
                                 name="password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 onChange={formik.handleChange}
                                 value={formik.values.password}
                                 InputProps={{
@@ -184,8 +229,30 @@ export const Login = () => {
                                             <LockRoundedIcon fontSize="medium" />
                                         </InputAdornment>
                                     ),
+                                    //visibility password icon
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={
+                                                    handleClickShowPassword
+                                                }
+                                                onMouseDown={
+                                                    handleMouseDownPassword
+                                                }
+                                                edge="end"
+                                            >
+                                                {showPassword ? (
+                                                    <VisibilityOff />
+                                                ) : (
+                                                    <Visibility />
+                                                )}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
                                 }}
                             />
+
                             <LoginButton
                                 variant="contained"
                                 size="medium"
