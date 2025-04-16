@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button } from '@mui/material';
+import omit from 'lodash/omit';
 import { LocalTable } from '../../organisms/local-table';
 import { MasterPage } from '../master-page';
 import { usePenduduk } from './penduduk-hooks';
@@ -12,6 +13,7 @@ import {
     findPenduduk,
 } from './penduduk-functions';
 import { PendudukFormIuran } from './penduduk-form-iuran';
+import { FormBuilder } from '../../organisms/form-builder';
 
 export const Penduduk = () => {
     const {
@@ -31,7 +33,23 @@ export const Penduduk = () => {
         formIuranTblColDef,
         formIuranTblData,
         setRetributionList,
+        filterPenduduk,
     } = usePenduduk();
+
+    const pendudukSearchFormDef = useMemo(() => {
+        const [address, pic, contact, email] = pendudukFormDef.map((formDef) =>
+            omit(formDef, ['validationSchema'])
+        );
+
+        return [address, pic, contact, email];
+    }, [pendudukFormDef]);
+
+    const pendudukSearchSubmitDef = {
+        label: 'Cari data penduduk',
+        onSubmit: (value) => {
+            filterPenduduk(value);
+        },
+    };
 
     return (
         <MasterPage>
@@ -50,6 +68,13 @@ export const Penduduk = () => {
                 columns={pendudukTblColDef}
                 data={pendudukTblRows}
                 title="Daftar Penduduk"
+                searchComponent={
+                    <FormBuilder
+                        formDefinitions={pendudukSearchFormDef}
+                        valueDefinitions={{}}
+                        submitDefinition={pendudukSearchSubmitDef}
+                    />
+                }
             />
             <PendudukFormDialog
                 isOpen={isFormOpen}
