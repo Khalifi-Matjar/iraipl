@@ -28,7 +28,7 @@
         </style>
         <style type="text/css" media="print">
             @page {
-                margin: 0.3cm;
+                margin: 1cm 0.3cm 0.3cm 1.5cm;
                 size: portrait;
             }
             table {
@@ -51,13 +51,11 @@
                     <th width="20px" align="right" rowspan="2">No.</th>
                     <th width="80px" align="center" rowspan="2">Tgl. Transaksi</th>
                     <th align="center" colspan="2">Bayar Untuk</th>
-                    <th align="left" rowspan="2">Jenis Iuran</th>
                     <th align="left" rowspan="2">Perumahan</th>
                     <th align="left" rowspan="2">Alamat</th>
                     <th width="100px" align="right" rowspan="2">Jumlah</th>
                     <th align="left" rowspan="2">Kolektor</th>
                     <th width="50px" align="left" rowspan="2">Tipe Pembayaran</th>
-                    <th width="50px">Catatan</th>
                 </tr>
                 <tr>
                     <th width="50px" align="center">Dari</th>
@@ -71,13 +69,11 @@
                         <td align="center">{{penerimaan.transactionDate|date('d F Y')}}</td>
                         <td align="center">{{penerimaan.periodStart|date('F Y')}}</td>
                         <td align="center">{{penerimaan.periodEnd|date('F Y')}}</td>
-                        <td>{{penerimaan.MasterIuran.iuranName}}</td>
                         <td>{{penerimaan.Penduduk.Perumahan.perumahan}}</td>
                         <td>{{penerimaan.Penduduk.address}}</td>
                         <td align="right">{{penerimaan.amount|number_format(2)}}</td>
                         <td>{{penerimaan.Kolektor.name}}</td>
                         <td>{{penerimaan.paymentType}}</td>
-                        <td></td>
                     </tr>
                 {% endfor %}
             </tbody>
