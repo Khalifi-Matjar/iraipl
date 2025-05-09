@@ -34,6 +34,7 @@ router.post('/login-attempt', async function (req, res, _next) {
         res.status(401);
         res.json({
             success: false,
+            message: 'email dan password tidak sama atau tidak ditemukan',
             metadata: {
                 ...req.body,
             },
