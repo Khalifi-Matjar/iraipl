@@ -4,7 +4,7 @@ const db = require('../database/models');
 const { Op } = require('sequelize');
 
 router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
-    const { from, to } = req.query;
+    const { from, to, paymentType: paymentTypeQuery, iuranId } = req.query;
     const penerimaanIuran = await db.PenerimaanIuran.findAll({
         include: [
             {
@@ -37,6 +37,12 @@ router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
                         [Op.not]: null,
                     },
                 },
+                {
+                    iuranId,
+                },
+                paymentTypeQuery.toLocaleLowerCase() !== 'undefined' && {
+                    paymentType: paymentTypeQuery,
+                },
             ],
         },
         order: [
@@ -44,11 +50,17 @@ router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
             [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
         ],
     });
+    const masterIuran = await db.MasterIuran.findByPk(iuranId);
+    const [payment] = ['Cash', 'Transfer'].filter(
+        (type) => type === paymentTypeQuery
+    );
 
     res.render('report/penerimaan-iuran/rincian-penerimaan-iuran', {
         penerimaanIuran,
         from,
         to,
+        iuranType: masterIuran.iuranName,
+        payment: payment ?? '-',
         debug: JSON.stringify(penerimaanIuran),
     });
 });

@@ -277,4 +277,83 @@ router.post('/validate', async function (req, res, _next) {
     res.end();
 });
 
+router.get('/history', async function (req, res, _next) {
+    const findUser = await authorizeApi(req);
+    let httpResponseCode;
+    let httpResponse;
+
+    if (!!findUser) {
+        try {
+            const { pendudukId, iuranId } = req.query;
+            const penerimaanIuran = await db.PenerimaanIuran.findAll({
+                include: [
+                    {
+                        model: db.MasterIuran,
+                    },
+                    {
+                        model: db.Kolektor,
+                    },
+                    {
+                        model: db.PenerimaanIuranValidasi,
+                    },
+                    {
+                        model: db.Penduduk,
+                        include: [
+                            {
+                                model: db.Perumahan,
+                            },
+                        ],
+                    },
+                ],
+                where: {
+                    [Op.and]: [
+                        {
+                            pendudukId,
+                        },
+                        {
+                            iuranId,
+                        },
+                    ],
+                },
+                order: [
+                    ['transactionDate', 'DESC'],
+                    [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
+                    ['createdAt', 'DESC'],
+                ],
+            });
+
+            httpResponseCode = 200;
+            httpResponse = {
+                success: true,
+                message: 'Success retrieving history penerimaan iuran data',
+                penerimaanIuran,
+                metadata: {
+                    query: req.query,
+                },
+            };
+        } catch (error) {
+            if (error) {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: error.message,
+                    metadata: {
+                        error,
+                    },
+                };
+            }
+        }
+    } else {
+        httpResponseCode = 401;
+        httpResponse = {
+            success: false,
+            message: 'Unauthorized user',
+        };
+    }
+
+    res.status(httpResponseCode);
+    res.json(httpResponse);
+    res.end();
+});
+
 module.exports = router;
