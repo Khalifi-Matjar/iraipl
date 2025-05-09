@@ -34,3 +34,13 @@ export const validatePenerimaan = ({
         },
     });
 };
+
+export const historyPenerimaan = ({ iuranId, pendudukId }) => {
+    return axios({
+        method: 'get',
+        url: `/api/penerimaan-iuran/history?iuranId=${iuranId}&pendudukId=${pendudukId}`,
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+        },
+    });
+};

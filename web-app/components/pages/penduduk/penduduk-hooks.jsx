@@ -10,9 +10,12 @@ import { Button } from '@mui/material';
 import { formatDate, formatMoney } from '../../../utils';
 import { listData as listIuranData } from '../master-iuran/master-iuran-functions';
 import { SpinnerContext } from '../../context/spinner-context';
+import { AppModalContext } from '../../context/app-modal-context';
+import { PendudukHistoryPayment } from './penduduk-history-payment';
 
 export const usePenduduk = (activeOnly = false) => {
     const pageSpinner = useContext(SpinnerContext);
+    const appModalContext = useContext(AppModalContext);
     const [pendudukId, setPendudukId] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [formValue, setFormValue] = useState({});
@@ -67,13 +70,41 @@ export const usePenduduk = (activeOnly = false) => {
                     );
                 },
             },
+            {
+                header: '',
+                accessorKey: 'id',
+                size: 30,
+                cell: (value) => {
+                    return (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            fullWidth
+                            onClick={() => {
+                                appModalContext.setIsOpen(true);
+                                appModalContext.setTitle(
+                                    'Riwayat Pembayaran Iuran'
+                                );
+                                appModalContext.setChildComponent(
+                                    <PendudukHistoryPayment
+                                        penduduk={value.row.original}
+                                        jenisIuran={jenisIuran}
+                                    />
+                                );
+                            }}
+                        >
+                            History
+                        </Button>
+                    );
+                },
+            },
             { header: 'Perumahan', accessorKey: 'Perumahan.perumahan' },
             { header: 'Alamat', accessorKey: 'address' },
             { header: 'PIC', accessorKey: 'pic' },
             { header: 'Kontak / WA', accessorKey: 'contact' },
             { header: 'email', accessorKey: 'email' },
         ],
-        []
+        [jenisIuran]
     );
 
     const pendudukFormDef = useMemo(() => {

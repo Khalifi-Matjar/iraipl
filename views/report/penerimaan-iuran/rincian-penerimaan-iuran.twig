@@ -29,24 +29,39 @@
         <style type="text/css" media="print">
             @page {
                 margin: 0.3cm;
-                size: landscape;
+                size: portrait;
+            }
+            table {
+                font-size: 85%;
+            }
+            th,td {
+                padding: 2px;
             }
         </style>
     </head>
     <body>
         <h1>Laporan Rincian Penerimaan Iuran</h1>
         <h3>Tanggal {{from|date('d F Y')}} S/D {{to|date('d F Y')}}</h3>
+        <h3>Jenis Iuran: {{iuranType}}</h3>
+        <h3>Tipe Pembayaran: {{payment}}</h3>
         <br />
         <table>
             <thead>
                 <tr>
-                    <th width="40px" align="right">No.</th>
-                    <th width="150px" align="center">Tgl. Transaksi</th>
-                    <th align="left">Jenis Iuran</th>
-                    <th align="left">Perumahan</th>
-                    <th align="left">Atas Nama</th>
-                    <th width="100px" align="right">Jumlah</th>
-                    <th align="left">Kolektor</th>
+                    <th width="20px" align="right" rowspan="2">No.</th>
+                    <th width="80px" align="center" rowspan="2">Tgl. Transaksi</th>
+                    <th align="center" colspan="2">Bayar Untuk</th>
+                    <th align="left" rowspan="2">Jenis Iuran</th>
+                    <th align="left" rowspan="2">Perumahan</th>
+                    <th align="left" rowspan="2">Alamat</th>
+                    <th width="100px" align="right" rowspan="2">Jumlah</th>
+                    <th align="left" rowspan="2">Kolektor</th>
+                    <th width="50px" align="left" rowspan="2">Tipe Pembayaran</th>
+                    <th width="50px">Catatan</th>
+                </tr>
+                <tr>
+                    <th width="50px" align="center">Dari</th>
+                    <th width="50px" align="center">Sampai</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,11 +69,15 @@
                     <tr>
                         <td align="right">{{loop.index}}</td>
                         <td align="center">{{penerimaan.transactionDate|date('d F Y')}}</td>
+                        <td align="center">{{penerimaan.periodStart|date('F Y')}}</td>
+                        <td align="center">{{penerimaan.periodEnd|date('F Y')}}</td>
                         <td>{{penerimaan.MasterIuran.iuranName}}</td>
                         <td>{{penerimaan.Penduduk.Perumahan.perumahan}}</td>
-                        <td>{{penerimaan.Penduduk.pic}}</td>
+                        <td>{{penerimaan.Penduduk.address}}</td>
                         <td align="right">{{penerimaan.amount|number_format(2)}}</td>
                         <td>{{penerimaan.Kolektor.name}}</td>
+                        <td>{{penerimaan.paymentType}}</td>
+                        <td></td>
                     </tr>
                 {% endfor %}
             </tbody>
