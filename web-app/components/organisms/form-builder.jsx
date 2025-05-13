@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import omit from 'lodash/omit';
 import { useFormik } from 'formik';
 import { NumericFormat } from 'react-number-format';
+import noop from 'lodash/noop';
 import Grid from '@mui/material/Grid';
 import {
     Button,
@@ -116,6 +117,7 @@ export const FormBuilder = ({
     formDefinitions,
     submitDefinition,
     valueDefinitions,
+    passFormik = noop,
 }) => {
     const initialValues = formDefinitions
         .filter(({ initialValue }) => !!initialValue)
@@ -146,6 +148,12 @@ export const FormBuilder = ({
         validateOnBlur: true,
         validateOnChange: false,
     });
+
+    useEffect(() => {
+        if (passFormik) {
+            passFormik(formik);
+        }
+    }, [passFormik, formik]);
 
     useEffect(() => {
         Object.entries(valueDefinitions).forEach(([key, value]) => {
@@ -278,4 +286,5 @@ FormBuilder.propTypes = {
         onSubmit: PropTypes.func,
     }),
     valueDefinitions: PropTypes.object,
+    passFormik: PropTypes.func,
 };

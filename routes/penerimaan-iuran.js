@@ -3,6 +3,7 @@ const isUndefined = require('lodash/isUndefined');
 const { authorizeApi } = require('../utils/authorize-route');
 const db = require('../database/models');
 const { Op } = require('sequelize');
+const moment = require('moment');
 var router = express.Router();
 
 router.get('/find', async function (req, res, _next) {
@@ -327,6 +328,84 @@ router.get('/history', async function (req, res, _next) {
                 success: true,
                 message: 'Success retrieving history penerimaan iuran data',
                 penerimaanIuran,
+                metadata: {
+                    query: req.query,
+                },
+            };
+        } catch (error) {
+            if (error) {
+                httpResponseCode = 500;
+                httpResponse = {
+                    success: false,
+                    message: error.message,
+                    metadata: {
+                        error,
+                    },
+                };
+            }
+        }
+    } else {
+        httpResponseCode = 401;
+        httpResponse = {
+            success: false,
+            message: 'Unauthorized user',
+        };
+    }
+
+    res.status(httpResponseCode);
+    res.json(httpResponse);
+    res.end();
+});
+
+router.get('/auto-amount', async function (req, res, _next) {
+    const findUser = await authorizeApi(req);
+    let httpResponseCode;
+    let httpResponse;
+
+    if (!!findUser) {
+        try {
+            const { pendudukId, iuranId, periodStart, periodEnd } = req.query;
+
+            const currentDate = moment(`${periodStart}-01`);
+            const endDate = moment(`${periodEnd}-01`);
+
+            let calculatedAmount = 0;
+            do {
+                const strCurrentDate = currentDate.format('YYYY-MM-DD');
+
+                const [amount] = await db.sequelize.query(
+                    `
+                    SELECT
+                        amount
+                    FROM
+                        \`tbl-master-nilai-iuran-penduduk\` 
+                    WHERE
+                        pendudukId = $pendudukId 
+                        AND iuranId = $iuranId
+                        AND startDate <= LAST_DAY( $date ) 
+                    ORDER BY
+                        startDate DESC,
+                        updatedAt DESC 
+                        LIMIT 0,1
+                `,
+                    {
+                        bind: {
+                            pendudukId,
+                            iuranId,
+                            date: strCurrentDate,
+                        },
+                    }
+                );
+                calculatedAmount += amount[0]?.amount ?? 0;
+
+                currentDate.add(1, 'M');
+            } while (currentDate <= endDate);
+
+            httpResponseCode = 200;
+            httpResponse = {
+                success: true,
+                message: 'Success retrieving auto amount data',
+                amount: calculatedAmount,
                 metadata: {
                     query: req.query,
                 },
