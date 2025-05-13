@@ -85,13 +85,13 @@ const InputBox = ({
                     error={error}
                     label={label}
                     helperText={(error ? errorInfo : undefined) ?? helperText}
-                    InputProps={
-                        formAttributes.type === 'number'
-                            ? {
-                                  inputComponent: NumericField,
-                              }
-                            : undefined
-                    }
+                    InputProps={{
+                        readOnly: formAttributes.readOnly,
+                        inputComponent:
+                            formAttributes.type === 'number'
+                                ? NumericField
+                                : undefined,
+                    }}
                     {...formAttributes}
                     type={
                         formAttributes.type === 'number'
@@ -151,9 +151,9 @@ export const FormBuilder = ({
 
     useEffect(() => {
         if (passFormik) {
-            passFormik(formik);
+            passFormik(formik.values);
         }
-    }, [passFormik, formik]);
+    }, [passFormik, formik.values]);
 
     useEffect(() => {
         Object.entries(valueDefinitions).forEach(([key, value]) => {
