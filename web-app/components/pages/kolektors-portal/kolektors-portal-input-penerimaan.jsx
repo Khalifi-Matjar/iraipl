@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import isNull from 'lodash/isNull';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -16,6 +16,7 @@ import { KolektorsPortalSearchPendudukDrawer } from './kolektors-portal-search-p
 import { SnackbarContext } from '../../context/snackbar-context';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
 import { KolektorsPortalContext } from './kolektors-portal-page';
+import { autoAmount } from '../penerimaan-iuran/penerimaan-iuran-functions';
 
 export const KolektorsPortalInputPenerimaan = () => {
     const [confirmModalProps, setConfirmModalProps] = useState(
@@ -29,6 +30,8 @@ export const KolektorsPortalInputPenerimaan = () => {
     const [openSearch, setOpenSearch] = useState(false);
 
     const [jenisIuran, setJenisIuran] = useState([]);
+
+    const [formikInstance, setFormikInstance] = useState(null);
 
     const formDefinition = useMemo(
         () => [
@@ -103,6 +106,29 @@ export const KolektorsPortalInputPenerimaan = () => {
         periodYear: '',
     });
 
+    useEffect(() => {
+        if (
+            choosenPenduduk &&
+            formikInstance?.values?.iuranId &&
+            formikInstance?.values?.periodStart &&
+            formikInstance?.values?.periodEnd
+        ) {
+            autoAmount({
+                pendudukId: choosenPenduduk.id,
+                iuranId: formikInstance?.values?.iuranId,
+                periodStart: formikInstance?.values?.periodStart,
+                periodEnd: formikInstance?.values?.periodEnd,
+            }).then(({ data }) => {
+                formikInstance.setFieldValue('amount', data.amount);
+            });
+        }
+    }, [
+        choosenPenduduk,
+        formikInstance?.values?.iuranId,
+        formikInstance?.values?.periodStart,
+        formikInstance?.values?.periodEnd,
+    ]);
+
     const kolektorsPortalContext = useContext(KolektorsPortalContext);
 
     const formSubmitDefinition = {
@@ -140,7 +166,6 @@ export const KolektorsPortalInputPenerimaan = () => {
                                     'Data penerimaan iuran telah disimpan'
                                 );
 
-                                console.log('resp', response);
                                 kolektorsPortalContext.printReceipt(
                                     response.data.metadata.penerimaan.id
                                 );
@@ -211,6 +236,9 @@ export const KolektorsPortalInputPenerimaan = () => {
                     formDefinitions={formDefinition}
                     valueDefinitions={formValueDefinition}
                     submitDefinition={formSubmitDefinition}
+                    passFormik={(formik) => {
+                        setFormikInstance(formik);
+                    }}
                 />
             </div>
             <ConfirmationModal {...confirmModalProps} />

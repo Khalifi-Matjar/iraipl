@@ -86,7 +86,6 @@ export const KolektorsPortalSearchPendudukDrawer = ({
     const pendudukSearchSubmitDef = {
         label: 'Cari data penduduk',
         onSubmit: (value) => {
-            console.log('value fil', value);
             filterPenduduk(value);
         },
     };

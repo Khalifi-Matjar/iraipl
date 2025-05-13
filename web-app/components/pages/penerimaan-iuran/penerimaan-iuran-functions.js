@@ -44,3 +44,13 @@ export const historyPenerimaan = ({ iuranId, pendudukId }) => {
         },
     });
 };
+
+export const autoAmount = ({ pendudukId, iuranId, periodStart, periodEnd }) => {
+    return axios({
+        method: 'get',
+        url: `/api/penerimaan-iuran/auto-amount?pendudukId=${pendudukId}&iuranId=${iuranId}&periodStart=${periodStart}&periodEnd=${periodEnd}`,
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
+        },
+    });
+};
