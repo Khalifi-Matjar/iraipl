@@ -47,24 +47,6 @@ export const KolektorsPortalInputPenerimaan = () => {
                 validationSchema: Yup.string().required('Berikan nama iuran'),
             },
             {
-                name: 'amount',
-                id: 'amount',
-                label: 'Jumlah / nilai',
-                gridColumn: 3,
-                type: 'number',
-                validationSchema: Yup.number().required(
-                    'Jumlah / nilai harus angka'
-                ),
-            },
-            {
-                name: 'transactionDate',
-                id: 'transactionDate',
-                label: 'Tgl. transaksi',
-                gridColumn: 3,
-                type: 'date',
-                validationSchema: Yup.date().required('Berikan tgl transaksi'),
-            },
-            {
                 name: 'periodStart',
                 id: 'periodStart',
                 label: 'Periode awal',
@@ -79,6 +61,25 @@ export const KolektorsPortalInputPenerimaan = () => {
                 gridColumn: 3,
                 type: 'month',
                 validationSchema: Yup.string().required('Pilih periode akhir'),
+            },
+            {
+                name: 'amount',
+                id: 'amount',
+                label: 'Jumlah / nilai',
+                gridColumn: 3,
+                type: 'number',
+                validationSchema: Yup.number().required(
+                    'Jumlah / nilai harus angka'
+                ),
+                readOnly: true,
+            },
+            {
+                name: 'transactionDate',
+                id: 'transactionDate',
+                label: 'Tgl. transaksi',
+                gridColumn: 3,
+                type: 'date',
+                validationSchema: Yup.date().required('Berikan tgl transaksi'),
             },
             {
                 name: 'paymentType',
@@ -109,24 +110,24 @@ export const KolektorsPortalInputPenerimaan = () => {
     useEffect(() => {
         if (
             choosenPenduduk &&
-            formikInstance?.values?.iuranId &&
-            formikInstance?.values?.periodStart &&
-            formikInstance?.values?.periodEnd
+            formikInstance?.iuranId &&
+            formikInstance?.periodStart &&
+            formikInstance?.periodEnd
         ) {
             autoAmount({
                 pendudukId: choosenPenduduk.id,
-                iuranId: formikInstance?.values?.iuranId,
-                periodStart: formikInstance?.values?.periodStart,
-                periodEnd: formikInstance?.values?.periodEnd,
+                iuranId: formikInstance?.iuranId,
+                periodStart: formikInstance?.periodStart,
+                periodEnd: formikInstance?.periodEnd,
             }).then(({ data }) => {
-                formikInstance.setFieldValue('amount', data.amount);
+                setFormValueDefinition({ amount: data.amount });
             });
         }
     }, [
         choosenPenduduk,
-        formikInstance?.values?.iuranId,
-        formikInstance?.values?.periodStart,
-        formikInstance?.values?.periodEnd,
+        formikInstance?.iuranId,
+        formikInstance?.periodStart,
+        formikInstance?.periodEnd,
     ]);
 
     const kolektorsPortalContext = useContext(KolektorsPortalContext);
