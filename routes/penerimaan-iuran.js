@@ -370,11 +370,38 @@ router.get('/auto-amount', async function (req, res, _next) {
             const endDate = moment(`${periodEnd}-01`);
 
             let calculatedAmount = 0;
+            const paidPeriod = [];
             do {
                 const strCurrentDate = currentDate.format('YYYY-MM-DD');
 
-                const [amount] = await db.sequelize.query(
+                // Checking whether the current period has been paid or not
+                const [paid] = await db.sequelize.query(
                     `
+                    SELECT
+                        * 
+                    FROM
+                        \`tbl-penerimaan-iuran\` 
+                    WHERE
+                        iuranId = $iuranId 
+                        AND pendudukId = $pendudukId 
+                        AND $date BETWEEN CONCAT( periodStart, '-01' ) 
+                        AND LAST_DAY( CONCAT( periodEnd, '-01' ) )
+                    `,
+                    {
+                        bind: {
+                            pendudukId,
+                            iuranId,
+                            date: strCurrentDate,
+                        },
+                    }
+                );
+
+                if (paid.length > 0) {
+                    paidPeriod.push(strCurrentDate);
+                } else {
+                    // Obatining the total amount that charged to penduduk based on the month range
+                    const [amount] = await db.sequelize.query(
+                        `
                     SELECT
                         amount
                     FROM
@@ -388,15 +415,16 @@ router.get('/auto-amount', async function (req, res, _next) {
                         updatedAt DESC 
                         LIMIT 0,1
                 `,
-                    {
-                        bind: {
-                            pendudukId,
-                            iuranId,
-                            date: strCurrentDate,
-                        },
-                    }
-                );
-                calculatedAmount += amount[0]?.amount ?? 0;
+                        {
+                            bind: {
+                                pendudukId,
+                                iuranId,
+                                date: strCurrentDate,
+                            },
+                        }
+                    );
+                    calculatedAmount += amount[0]?.amount ?? 0;
+                }
 
                 currentDate.add(1, 'M');
             } while (currentDate <= endDate);
@@ -406,6 +434,7 @@ router.get('/auto-amount', async function (req, res, _next) {
                 success: true,
                 message: 'Success retrieving auto amount data',
                 amount: calculatedAmount,
+                paidPeriod,
                 metadata: {
                     query: req.query,
                 },

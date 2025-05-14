@@ -17,6 +17,8 @@ import { SnackbarContext } from '../../context/snackbar-context';
 import { ConfirmationModal } from '../../organisms/confirmation-modal';
 import { KolektorsPortalContext } from './kolektors-portal-page';
 import { autoAmount } from '../penerimaan-iuran/penerimaan-iuran-functions';
+import moment from 'moment';
+import { SpinnerContext } from '../../context/spinner-context';
 
 export const KolektorsPortalInputPenerimaan = () => {
     const [confirmModalProps, setConfirmModalProps] = useState(
@@ -24,6 +26,8 @@ export const KolektorsPortalInputPenerimaan = () => {
     );
 
     const snackbar = useContext(SnackbarContext);
+
+    const pageSpinner = useContext(SpinnerContext);
 
     const [choosenPenduduk, setChoosenPenduduk] = useState(null);
 
@@ -114,13 +118,29 @@ export const KolektorsPortalInputPenerimaan = () => {
             formikInstance?.periodStart &&
             formikInstance?.periodEnd
         ) {
+            pageSpinner.setOpen(true);
             autoAmount({
                 pendudukId: choosenPenduduk.id,
                 iuranId: formikInstance?.iuranId,
                 periodStart: formikInstance?.periodStart,
                 periodEnd: formikInstance?.periodEnd,
             }).then(({ data }) => {
-                setFormValueDefinition({ amount: data.amount });
+                const { amount, paidPeriod } = data;
+                // paidPeriod > 0 means, there are some periods that has been paid within selected range, don't set the amount
+                if (paidPeriod.length > 0) {
+                    setFormValueDefinition({ amount: '' });
+                    snackbar.setOpen(true);
+                    snackbar.setType('error');
+                    snackbar.setMessage(
+                        `Ada beberapa periode yang telah dibayar dari rentang yang dipilih.
+                        Periode tersebut adalah: ${paidPeriod
+                            .map((period) => moment(period).format('MMMM YYYY'))
+                            .join(', ')}`
+                    );
+                } else {
+                    setFormValueDefinition({ amount });
+                }
+                pageSpinner.setOpen(false);
             });
         }
     }, [

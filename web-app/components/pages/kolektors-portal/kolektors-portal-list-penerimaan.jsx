@@ -62,7 +62,11 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <Stack spacing={2} direction="row" sx={{ alignItems: 'center' }}>
+            <Stack
+                spacing={2}
+                direction="row"
+                sx={{ alignItems: 'flex-start' }}
+            >
                 <Avatar>{getInitialName(penerimaan.Penduduk.pic)}</Avatar>
                 <Stack>
                     <Typography variant="subtitle1">
@@ -90,6 +94,14 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                         variant="outlined"
                         size="small"
                     />
+                    {penerimaan.PenerimaanIuranValidasi && (
+                        <Chip
+                            sx={{ marginTop: '10px' }}
+                            label="Tervalidasi"
+                            color="success"
+                            size="small"
+                        />
+                    )}
                     <br />
                 </Stack>
             </Stack>
