@@ -56,11 +56,9 @@
                     <th width="20px" align="right" rowspan="2">No.</th>
                     <th width="80px" align="center" rowspan="2">Tgl. Transaksi</th>
                     <th align="center" colspan="2">Bayar Untuk</th>
-                    <th align="left" rowspan="2">Perumahan</th>
-                    <th align="left" rowspan="2">Alamat</th>
                     <th width="60px" align="right" rowspan="2">Jumlah</th>
-                    <th align="left" rowspan="2">Kolektor</th>
                     <th width="50px" align="left" rowspan="2">Tipe Pembayaran</th>
+                    <th>Keterangan</th>
                 </tr>
                 <tr>
                     <th width="80px" align="center">Dari</th>
@@ -76,15 +74,13 @@
                         <td align="center">{{penerimaan.transactionDate|date('d F Y')}}</td>
                         <td align="center">{{penerimaan.periodStart|date('F Y')}}</td>
                         <td align="center">{{penerimaan.periodEnd|date('F Y')}}</td>
-                        <td>{{penerimaan.Penduduk.Perumahan.perumahan}}</td>
-                        <td>{{penerimaan.Penduduk.address}}</td>
                         <td align="right">{{penerimaan.amount|number_format(2)}}</td>
-                        <td>{{penerimaan.Kolektor.name}}</td>
                         <td>{{penerimaan.paymentType}}</td>
+                        <td>{{penerimaan.summary}}</td>
                     </tr>
                 {% endfor %}
                 <tr class="total">
-                    <td colspan="6">Total</td>
+                    <td colspan="4">Total</td>
                     <td align="right">{{ total|number_format(2) }}</td>
                     <td colspan="2"></td>
                 </tr>

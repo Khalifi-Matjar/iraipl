@@ -11,6 +11,7 @@ import { dateFormat, formatDate } from '../../../utils';
 import { Button, Divider, styled } from '@mui/material';
 import { paymentType } from '../../../utils/constants';
 import { listData as listIuranData } from '../master-iuran/master-iuran-functions';
+import { listData as listKolektorData } from '../kolektor/kolektor-functions';
 
 const REPORT_URL = `${location.origin}/report/penerimaan-iuran/rincian-penerimaan-iuran`;
 
@@ -22,12 +23,18 @@ const StyledIframe = styled('iframe')(() => ({
 
 export const LaporanRincianPenerimaan = () => {
     const [jenisIuran, setJenisIuran] = useState([]);
+    const [kolektor, setKolektor] = useState([]);
 
     useEffect(() => {
         listIuranData((iuran) => {
             setJenisIuran(iuran);
+            listKolektorData((kolektor) => {
+                setKolektor(kolektor);
+            });
         });
     }, []);
+
+    console.log(kolektor);
 
     const searchFormDef = useMemo(
         () => [
@@ -69,8 +76,38 @@ export const LaporanRincianPenerimaan = () => {
                 })),
                 validationSchema: Yup.string().required('Berikan nama iuran'),
             },
+            {
+                name: 'kolektorId',
+                id: 'kolektorId',
+                label: 'Kolektor',
+                gridColumn: 6,
+                options: kolektor.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                })),
+            },
+            {
+                name: 'reportType',
+                id: 'reportType',
+                label: 'Tipe Laporan',
+                gridColumn: 6,
+                options: [
+                    {
+                        label: 'Lengkap dengan alamat',
+                        value: '1',
+                    },
+                    {
+                        label: 'Tanpa alamat',
+                        value: '2',
+                    },
+                ],
+                optionsFieldType: 'radio',
+                validationSchema: Yup.string().required(
+                    'Tentukan tipe laporan'
+                ),
+            },
         ],
-        [jenisIuran]
+        [jenisIuran, kolektor]
     );
 
     const [searchFormValue] = useState({
@@ -83,13 +120,22 @@ export const LaporanRincianPenerimaan = () => {
     const searchFormSubmitDef = useMemo(
         () => ({
             label: 'Lihat laporan',
-            onSubmit: ({ from, to, paymentType, iuranId }) => {
+            onSubmit: ({
+                from,
+                to,
+                paymentType,
+                iuranId,
+                kolektorId,
+                reportType,
+            }) => {
                 const url = new URL(REPORT_URL);
                 url.search = new URLSearchParams({
                     from,
                     to,
                     paymentType,
                     iuranId,
+                    kolektorId,
+                    reportType,
                 });
 
                 reportIframe.current.src = url;
