@@ -18,7 +18,7 @@ const RECEIPT_URL = `${location.origin}/report/penerimaan-iuran/receipt`;
 
 const StyledIframe = styled('iframe')(() => ({
     width: '100%',
-    height: '300px',
+    height: '350px',
     border: 'solid 1px #ccc',
 }));
 
