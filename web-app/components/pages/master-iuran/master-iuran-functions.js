@@ -1,6 +1,7 @@
 import axios from 'axios';
 import isNull from 'lodash/isNull';
 import { LOCAL_STORAGE_TOKEN_KEY } from '../../../utils';
+import isUndefined from 'lodash/isUndefined';
 
 export const mutateData = (id, callback) => (value) => {
     axios({
@@ -27,10 +28,10 @@ export const deleteData = (id, callback) => {
     });
 };
 
-export const listData = (callback) => {
+export const listData = (callback, { parentId } = {}) => {
     axios({
         method: 'get',
-        url: '/api/master-iuran/find',
+        url: `/api/master-iuran/find${!isUndefined(parentId) ? `?parentId=${parentId}` : ''}`,
         headers: {
             Authorization: `Bearer ${localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)}`,
         },

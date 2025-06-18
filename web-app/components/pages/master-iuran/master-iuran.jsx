@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { LocalTable } from '../../organisms/local-table';
+import { LocalTable, rowGrouping } from '../../organisms/local-table';
 import { MasterPage } from '../master-page';
 import { useMasterIuran } from './master-iuran-hooks';
 import { MasterIuranFormDialog } from './master-iuran-form-dialog';
@@ -37,6 +37,7 @@ export const MasterIuran = () => {
                 columns={tblColDef}
                 data={tblRows}
                 title="Jenis-Jenis Iuran"
+                isExpandable={true}
             />
             <MasterIuranFormDialog
                 isOpen={isFormOpen}
@@ -46,14 +47,30 @@ export const MasterIuran = () => {
                 onSubmit={mutateData(id, ({ success }) => {
                     if (success) {
                         setIsFormOpen(false);
-                        listData((iuran) => void setTblRows(iuran));
+                        listData((iuran) => {
+                            let iuranData = rowGrouping({
+                                data: iuran,
+                                key: 'id',
+                                relation: 'iuranParentId',
+                                reference: null,
+                            });
+                            setTblRows(iuranData);
+                        });
                     }
                 })}
                 onDelete={() => {
                     deleteData(id, ({ success }) => {
                         if (success) {
                             setIsFormOpen(false);
-                            listData((iuran) => void setTblRows(iuran));
+                            listData((iuran) => {
+                                let iuranData = rowGrouping({
+                                    data: iuran,
+                                    key: 'id',
+                                    relation: 'iuranParentId',
+                                    reference: null,
+                                });
+                                setTblRows(iuranData);
+                            });
                         }
                     });
                 }}

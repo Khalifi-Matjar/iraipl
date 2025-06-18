@@ -2,24 +2,25 @@ import React, { useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import { Button } from '@mui/material';
 import { findData, listData } from './master-iuran-functions';
+import { rowGrouping } from '../../organisms/local-table';
 
 export const useMasterIuran = () => {
     const [id, setId] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [formValue, setFormValue] = useState({});
     const [tblRows, setTblRows] = useState([]);
+    const [allParentIuran, setAllParentIuran] = useState([]);
     const tblColDef = useMemo(
         () => [
             {
                 header: '',
                 accessorKey: 'id',
-                size: 30,
+                size: 20,
                 cell: (value) => {
                     return (
                         <Button
                             variant="contained"
                             size="small"
-                            fullWidth
                             onClick={() => {
                                 findData(
                                     value.row.original.id,
@@ -55,6 +56,15 @@ export const useMasterIuran = () => {
     const formDef = useMemo(() => {
         return [
             {
+                name: 'iuranParentId',
+                id: 'iuranParentId',
+                label: 'Induk Iuran',
+                gridColumn: 12,
+                options: allParentIuran.map(
+                    ({ id: value, iuranName: label }) => ({ value, label })
+                ),
+            },
+            {
                 name: 'iuranName',
                 id: 'iuranName',
                 label: 'Nama Iuran',
@@ -76,12 +86,19 @@ export const useMasterIuran = () => {
                 ),
             },
         ];
-    }, []);
+    }, [allParentIuran]);
 
     useEffect(() => {
         // List all data here
         listData((iuran) => {
-            setTblRows(iuran);
+            let iuranData = rowGrouping({
+                data: iuran,
+                key: 'id',
+                relation: 'iuranParentId',
+                reference: null,
+            });
+            setTblRows(iuranData);
+            listData((iuran) => void setAllParentIuran(iuran), { parentId: 0 });
         });
     }, []);
 

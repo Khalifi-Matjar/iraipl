@@ -21,9 +21,13 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
     flexRender,
     getCoreRowModel,
+    getExpandedRowModel,
     getPaginationRowModel,
     useReactTable,
 } from '@tanstack/react-table';
@@ -82,12 +86,27 @@ const DefaultSearchComponent = ({ title }) => (
     </Paper>
 );
 
+export const rowGrouping = ({ data: tableData, relation, key, reference }) => {
+    return tableData
+        ?.filter((data) => data[relation] === reference)
+        ?.map((data) => ({
+            ...data,
+            children: rowGrouping({
+                data: tableData,
+                relation,
+                key,
+                reference: data[key],
+            }),
+        }));
+};
+
 export const LocalTable = ({
     columns,
     data,
     title,
     hasTitle = true,
     hasSearch = true,
+    isExpandable = false,
     searchComponent = <DefaultSearchComponent title={title ?? 'data'} />,
 }) => {
     const [pagination, setPagination] = useState({
@@ -95,14 +114,20 @@ export const LocalTable = ({
         pageSize: 10,
     });
 
+    const [expanded, setExpanded] = React.useState({});
+
     const tableInstance = useReactTable({
         columns,
         data,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onPaginationChange: setPagination,
+        getSubRows: (row) => row.children,
+        getExpandedRowModel: getExpandedRowModel(),
+        onExpandedChange: setExpanded,
         state: {
             pagination,
+            expanded,
         },
     });
 
@@ -160,7 +185,8 @@ export const LocalTable = ({
                                 className="border-b bg-white"
                                 hover
                             >
-                                {row.getVisibleCells().map((cell) => (
+                                {/* Rest of cells */}
+                                {row.getVisibleCells().map((cell, index) => (
                                     <TableCell
                                         key={cell.id}
                                         align={
@@ -168,9 +194,45 @@ export const LocalTable = ({
                                             'left'
                                         }
                                     >
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
+                                        {isExpandable && index === 0 ? (
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    paddingLeft: `${row.depth * 30}px`,
+                                                }}
+                                            >
+                                                {row.getCanExpand() ? (
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={row.getToggleExpandedHandler()}
+                                                    >
+                                                        {row.getIsExpanded() ? (
+                                                            <KeyboardArrowUpIcon />
+                                                        ) : (
+                                                            <KeyboardArrowDownIcon />
+                                                        )}
+                                                    </IconButton>
+                                                ) : (
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{
+                                                            visibility:
+                                                                'hidden',
+                                                        }}
+                                                    >
+                                                        <RemoveIcon />
+                                                    </IconButton>
+                                                )}
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </div>
+                                        ) : (
+                                            flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )
                                         )}
                                     </TableCell>
                                 ))}
@@ -204,5 +266,7 @@ LocalTable.propTypes = {
     title: PropTypes.string,
     hasTitle: PropTypes.bool,
     hasSearch: PropTypes.bool,
+    grouping: PropTypes.object,
+    isExpandable: PropTypes.bool,
     searchComponent: PropTypes.node,
 };

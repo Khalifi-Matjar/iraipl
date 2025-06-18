@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+    <head>
+        <title>IRA IPL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="text/javascript">
+            const debug = {{debug}};
+            console.log(debug)
+        </script>
+        <style type="text/css">
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                margin: 0;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 12px;
+            }
+            table {
+                width: 100%;
+                table-layout: auto;
+                border-collapse: collapse;
+            }
+            tbody tr:nth-child(odd) {
+                background-color: #cccccc4d;
+            }
+            th,
+            td {
+                padding: 5px;
+            }
+            hr {
+                border: solid 1px #cccccc4d;
+            }
+            .total {
+                font-weight: 500;
+                background-color: transparent !important;
+                border-top: double 4px;
+            }
+        </style>
+        <style type="text/css" media="print">
+            @page {
+                margin: 1.5cm 1cm 1.5cm 2.5cm;
+                size: portrait;
+            }
+            table {
+                font-size: 85%;
+            }
+            th,
+            td {
+                padding: 1px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Laporan Rekap Per Iuran</h1>
+        <h3>Tanggal {{from|date('d F Y')}} S/D {{to|date('d F Y')}}</h3>
+        <br />
+        <table border="1">
+            <thead>
+                <tr>
+                    <th rowspan="2">Tgl.</th>
+                    <th rowspan="2">Hari</th>
+                    <th rowspan="2">IKK</th>
+                    <th colspan="4">Retribusi Karcis</th>
+                    <th colspan="3">Retribusi Lain-Lain</th>
+                    <th rowspan="2">
+                        Hasil Penjualan Sawit &amp; Lapangan Bola
+                    </th>
+                    <th rowspan="2">Jumlah</th>
+                </tr>
+                <tr>
+                    <th>5</th>
+                    <th>15</th>
+                    <th>20</th>
+                    <th>30</th>
+                    <th>RET. Kend</th>
+                    <th>RET. Renovasi &amp; Pembangunan Rumah</th>
+                    <th>RET. KEA DLL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set totalIKK = 0 %}
+                {% set totalKARCIS_5 = 0 %}
+                {% set totalKARCIS_15 = 0 %}
+                {% set totalKARCIS_20 = 0 %}
+                {% set totalKARCIS_30 = 0 %}
+                {% set totalRET_KEND = 0 %}
+                {% set totalRET_RENOVASI_PEMB_RUMAH = 0 %}
+                {% set totalRET_KEA_DLL = 0 %}
+                {% set totalSAWIT_LAP_BOLA = 0 %}
+                {% set totalTotalRow = 0 %}
+                {% for rekap in rekap %}
+                    {% set totalIKK = totalIKK + rekap.IKK %}
+                    {% set totalKARCIS_5 = totalKARCIS_5 + rekap.KARCIS_5 %}
+                    {% set totalKARCIS_15 = totalKARCIS_15 + rekap.KARCIS_15 %}
+                    {% set totalKARCIS_20 = totalKARCIS_20 + rekap.KARCIS_20 %}
+                    {% set totalKARCIS_30 = totalKARCIS_30 + rekap.KARCIS_30 %}
+                    {% set totalRET_KEND = totalRET_KEND + rekap.RET_KEND %}
+                    {% set totalRET_RENOVASI_PEMB_RUMAH = totalRET_RENOVASI_PEMB_RUMAH + rekap.RET_RENOVASI_PEMB_RUMAH %}
+                    {% set totalRET_KEA_DLL = totalRET_KEA_DLL + rekap.RET_KEA_DLL %}
+                    {% set totalSAWIT_LAP_BOLA = totalSAWIT_LAP_BOLA + rekap.SAWIT_LAP_BOLA %}
+                    {% set totalRow = rekap.IKK + rekap.KARCIS_5 + rekap.KARCIS_15 + rekap.KARCIS_20 + rekap.KARCIS_30 + rekap.RET_KEND + rekap.RET_RENOVASI_PEMB_RUMAH + rekap.RET_KEA_DLL + rekap.SAWIT_LAP_BOLA %}
+                    {% set totalTotalRow = totalTotalRow + totalRow %}
+                    <tr>
+                        <td>{{rekap.date|date('d-m-Y')}}</td>
+                        <td>{{rekap.day}}</td>
+                        <td align="right" width="50px">{{rekap.IKK|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.KARCIS_5|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.KARCIS_15|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.KARCIS_20|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.KARCIS_30|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.RET_KEND|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.RET_RENOVASI_PEMB_RUMAH|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.RET_KEA_DLL|number_format(2)}}</td>
+                        <td align="right" width="50px">{{rekap.SAWIT_LAP_BOLA|number_format(2)}}</td>
+                        <td align="right" width="50px">{{totalRow|number_format(2)}}</td>
+                    </tr>
+                {% endfor %}
+                <tr class="total">
+                    <td colspan="2">Total</td>
+                    <td align="right">{{totalIKK|number_format(2)}}</td>
+                    <td align="right">{{totalKARCIS_5|number_format(2)}}</td>
+                    <td align="right">{{totalKARCIS_15|number_format(2)}}</td>
+                    <td align="right">{{totalKARCIS_20|number_format(2)}}</td>
+                    <td align="right">{{totalKARCIS_30|number_format(2)}}</td>
+                    <td align="right">{{totalRET_KEND|number_format(2)}}</td>
+                    <td align="right">{{totalRET_RENOVASI_PEMB_RUMAH|number_format(2)}}</td>
+                    <td align="right">{{totalRET_KEA_DLL|number_format(2)}}</td>
+                    <td align="right">{{totalSAWIT_LAP_BOLA|number_format(2)}}</td>
+                    <td align="right">{{totalTotalRow|number_format(2)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

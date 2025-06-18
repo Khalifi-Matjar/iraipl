@@ -116,6 +116,14 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                     'Pilih tipe pembayaran'
                 ),
             },
+            {
+                name: 'summary',
+                id: 'summary',
+                label: 'Keterangan',
+                gridColumn: 12,
+                multiline: true,
+                rows: 3,
+            },
         ];
 
         if (penerimaanIuranPage.type === PenerimaanIuranType.WITH_KOLEKTOR) {
@@ -143,7 +151,6 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
         () => ({
             label: 'Simpan data iuran',
             onSubmit: (value) => {
-                console.log('submit', value);
                 confirmation.setTitle('Simpan data penerimaan iuran');
                 confirmation.setMessage(
                     'Anda yakin akan menyimpan data penerimaan iuran ini?'
