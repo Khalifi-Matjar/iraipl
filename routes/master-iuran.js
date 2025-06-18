@@ -10,9 +10,17 @@ router.get('/find', async function (req, res, _next) {
     let httpResponse;
 
     if (!!findUser) {
+        const iuranParentId = req.query.parentId;
         const iuran = !!req.query.id
             ? await db.MasterIuran.findByPk(req.query.id)
-            : await db.MasterIuran.findAll();
+            : await db.MasterIuran.findAll({
+                  where: iuranParentId
+                      ? {
+                            iuranParentId:
+                                iuranParentId === '0' ? null : iuranParentId,
+                        }
+                      : null,
+              });
         httpResponseCode = 200;
         httpResponse = {
             success: true,
@@ -35,7 +43,7 @@ router.get('/find', async function (req, res, _next) {
 });
 
 router.post('/add', async function (req, res, _next) {
-    const { iuranName, requireCollector } = req.body;
+    const { iuranName, requireCollector, iuranParentId } = req.body;
 
     // Auth
     const auth = req.headers.authorization;
@@ -51,6 +59,7 @@ router.post('/add', async function (req, res, _next) {
             iuranName,
             requireCollector,
             userId,
+            iuranParentId,
         });
 
         httpResponseCode = addMasterIuran ? 200 : 500;
@@ -88,11 +97,12 @@ router.post('/update', async function (req, res, _next) {
 
     if (!!findUser) {
         const iuran = await db.MasterIuran.findByPk(req.query.id);
-        const { iuranName, requireCollector } = req.body;
+        const { iuranName, requireCollector, iuranParentId } = req.body;
 
         await iuran.update({
             iuranName,
             requireCollector,
+            iuranParentId,
         });
 
         httpResponseCode = 200;

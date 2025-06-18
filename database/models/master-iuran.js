@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             iuranName: DataTypes.STRING,
             requireCollector: DataTypes.INTEGER,
             userId: DataTypes.STRING,
+            iuranParentId: DataTypes.STRING,
         },
         {
             sequelize,

@@ -34,8 +34,6 @@ export const LaporanRincianPenerimaan = () => {
         });
     }, []);
 
-    console.log(kolektor);
-
     const searchFormDef = useMemo(
         () => [
             {

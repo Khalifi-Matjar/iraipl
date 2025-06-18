@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../database/models');
+const { rowGrouping } = require('../utils/switcher');
 const { Op } = require('sequelize');
+const moment = require('moment');
+const { IURAN_ID, INDONESIAN_DAY } = require('../utils/constants');
 
 router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
     const {
@@ -57,6 +60,7 @@ router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
         },
         order: [
             ['transactionDate', 'ASC'],
+            [db.Penduduk, 'address', 'ASC'],
             [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
         ],
     });
@@ -123,6 +127,73 @@ FROM
         from,
         to,
         debug: JSON.stringify(rekapPenerimaanKolektor),
+    });
+});
+
+router.get('/rekap-per-iuran', async function (req, res, next) {
+    const { from, to } = req.query;
+
+    const [rekapPerIuranRow] = await db.sequelize.query(
+        `SELECT
+            penerimaan.transactionDate, penerimaan.iuranId, SUM(penerimaan.amount) AS amount
+        FROM
+            \`tbl-penerimaan-iuran\` penerimaan
+            INNER JOIN \`tbl-penerimaan-iuran-validasi\` validasi ON penerimaan.id = validasi.penerimaanId
+        WHERE
+            validasi.validationStatus = 1
+            AND penerimaan.transactionDate BETWEEN $from AND $to
+        GROUP BY
+            penerimaan.transactionDate, penerimaan.iuranId
+        ORDER BY
+            penerimaan.transactionDate ASC`,
+        {
+            bind: {
+                from,
+                to,
+            },
+        }
+    );
+
+    const currentDate = moment(from);
+    const endDate = moment(to);
+    const iuranKeys = Object.keys(IURAN_ID);
+
+    const rekap = [];
+    do {
+        const strCurrentDate = currentDate.format('YYYY-MM-DD');
+        const allAmount = [];
+
+        iuranKeys.forEach((iuranKey) => {
+            const [filteredRekap] = rekapPerIuranRow.filter(
+                ({ iuranId, transactionDate }) =>
+                    transactionDate === strCurrentDate &&
+                    iuranId === IURAN_ID[iuranKey]
+            );
+            const amount = filteredRekap ? (filteredRekap.amount ?? 0) : 0;
+
+            allAmount[iuranKey] = amount;
+        });
+        const rekapRow = {
+            date: strCurrentDate,
+            day:
+                INDONESIAN_DAY[currentDate.format('dd')] ??
+                currentDate.format('dd'),
+            ...allAmount,
+        };
+
+        rekap.push(rekapRow);
+        currentDate.add(1, 'd');
+    } while (currentDate <= endDate);
+
+    res.render('report/penerimaan-iuran/rekap-per-iuran', {
+        from,
+        to,
+        rekap,
+        debug: JSON.stringify({
+            rekapPerIuranRow,
+            rekap,
+            locales: moment.locales(),
+        }),
     });
 });
 

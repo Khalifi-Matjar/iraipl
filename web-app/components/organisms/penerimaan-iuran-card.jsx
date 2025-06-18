@@ -102,6 +102,15 @@ export const PenerimaanIuranCard = ({
                                 variant="standard"
                             />
                         </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                disabled
+                                fullWidth
+                                label="Keterangan"
+                                value={penerimaanIuran.summary}
+                                variant="standard"
+                            />
+                        </Grid>
                     </Grid>
                 </AccordionDetails>
                 <AccordionActions>
