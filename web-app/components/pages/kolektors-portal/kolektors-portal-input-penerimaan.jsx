@@ -169,6 +169,7 @@ export const KolektorsPortalInputPenerimaan = () => {
                         );
                         setConfirmModalProps(closeConfirmationModalObject);
                     } else {
+                        pageSpinner.setOpen(true);
                         axios({
                             method: 'post',
                             url: '/api/penerimaan-iuran/add?add_by_kolektor=true',
@@ -211,13 +212,13 @@ export const KolektorsPortalInputPenerimaan = () => {
                                     `${error.message} - ${error.response.data.message}`
                                 );
                             })
-                            .finally(
-                                () =>
-                                    /** close confirmation modal */
-                                    void setConfirmModalProps(
-                                        closeConfirmationModalObject
-                                    )
-                            );
+                            .finally(() => {
+                                /** close confirmation modal */
+                                setConfirmModalProps(
+                                    closeConfirmationModalObject
+                                );
+                                pageSpinner.setOpen(false);
+                            });
                     }
                 },
                 onConfirmNoAction: () =>

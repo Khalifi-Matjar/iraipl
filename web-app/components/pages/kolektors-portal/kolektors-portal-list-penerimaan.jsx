@@ -117,6 +117,7 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                     color="warning"
                     size="large"
                     onClick={onDeleteClick}
+                    disabled={penerimaan.PenerimaanIuranValidasi}
                 >
                     <DeleteIcon />
                 </IconButton>
@@ -124,8 +125,6 @@ const PenerimaanSearchItem = ({ penerimaan, onDelete }) => {
                 <IconButton
                     color="primary"
                     size="large"
-                    // target="_blank"
-                    // href={`/report/penerimaan-iuran/receipt?id=${penerimaan.id}`}
                     onClick={() => {
                         kolektorsPortalContext.printReceipt(penerimaan.id);
                     }}
