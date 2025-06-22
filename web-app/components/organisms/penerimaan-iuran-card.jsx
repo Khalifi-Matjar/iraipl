@@ -120,6 +120,7 @@ export const PenerimaanIuranCard = ({
                             variant="outlined"
                             color="warning"
                             onClick={() => void onDelete(penerimaanIuran.id)}
+                            disabled={penerimaanIuran?.PenerimaanIuranValidasi}
                         >
                             Hapus
                         </Button>
