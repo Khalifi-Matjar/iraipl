@@ -39,6 +39,7 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
     const [choosenPenduduk, setChoosenPenduduk] = useState(null);
 
     const formDefinition = useMemo(() => {
+        const jenisIuranClone = [...jenisIuran];
         const baseDefinition = [
             {
                 name: 'iuranId',
@@ -51,6 +52,14 @@ export const PenerimaanIuranFormInput = ({ kolektor }) => {
                             Boolean(requireCollector) ===
                             (penerimaanIuranPage.type ===
                                 PenerimaanIuranType.WITH_KOLEKTOR)
+                    )
+                    // Filter only iuran who has no children that will be used
+                    .filter(
+                        (iuran) =>
+                            !jenisIuranClone.some(
+                                ({ iuranParentId }) =>
+                                    iuranParentId === iuran.id
+                            )
                     )
                     .map(({ id, iuranName }) => ({
                         label: iuranName,

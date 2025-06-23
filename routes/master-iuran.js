@@ -20,6 +20,7 @@ router.get('/find', async function (req, res, _next) {
                                 iuranParentId === '0' ? null : iuranParentId,
                         }
                       : null,
+                  order: [['iuranName', 'ASC']],
               });
         httpResponseCode = 200;
         httpResponse = {
