@@ -60,8 +60,8 @@ router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
         },
         order: [
             ['transactionDate', 'ASC'],
-            [db.Penduduk, 'address', 'ASC'],
             [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
+            [db.Penduduk, 'address', 'ASC'],
         ],
     });
     const masterIuran = await db.MasterIuran.findByPk(iuranId);
