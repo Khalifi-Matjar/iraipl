@@ -63,6 +63,35 @@ export const PenerimaanIuranValidasi = () => {
         });
     }, []);
 
+    const validationProcess = ({ penerimaanId, validationStatus, summary }) => {
+        validatePenerimaan({
+            penerimaanId,
+            validationStatus,
+            summary,
+        })
+            .then(() => {
+                snackbar.setOpen(true);
+                snackbar.setType(validationStatus === 1 ? 'success' : 'error');
+                snackbar.setMessage(
+                    validationStatus === 1
+                        ? 'Penerimaan telah divalidasi. Validasi terima'
+                        : 'Penerimaan telah ditolak. Validasi tolak'
+                );
+                listPenerimaanIuranData(searchFormValue);
+                setHighlightedPenerimaan(null);
+            })
+            .catch((error) => {
+                snackbar.setOpen(true);
+                snackbar.setType('error');
+                snackbar.setMessage(
+                    `${error.message} - ${error.response.data.message}`
+                );
+            })
+            .finally(() => {
+                confirmation.setOpen(false);
+            });
+    };
+
     return (
         <MasterPage>
             <LocalTable
@@ -81,36 +110,32 @@ export const PenerimaanIuranValidasi = () => {
             <PenerimaanIuranCard
                 penerimaanIuran={highlightedPenerimaan}
                 hasValidateButton={true}
+                hasRejectButton={true}
                 onValidateAccept={(penerimaanId) => {
                     confirmation.setMessage(
                         'Anda yakin telah memvalidasi penerimaan ini?'
                     );
                     confirmation.setTitle('Validasi terima');
                     confirmation.setOnConfirmYesAction(() => () => {
-                        validatePenerimaan({
+                        validationProcess({
                             penerimaanId,
                             validationStatus: 1,
                             summary: '',
-                        })
-                            .then(() => {
-                                snackbar.setOpen(true);
-                                snackbar.setType('success');
-                                snackbar.setMessage(
-                                    'Penerimaan telah divalidasi. Validasi terima'
-                                );
-                                listPenerimaanIuranData(searchFormValue);
-                                setHighlightedPenerimaan(null);
-                            })
-                            .catch((error) => {
-                                snackbar.setOpen(true);
-                                snackbar.setType('error');
-                                snackbar.setMessage(
-                                    `${error.message} - ${error.response.data.message}`
-                                );
-                            })
-                            .finally(() => {
-                                confirmation.setOpen(false);
-                            });
+                        });
+                    });
+                    confirmation.setOpen(true);
+                }}
+                onValidateReject={({ penerimaanId, rejectionReason }) => {
+                    confirmation.setMessage(
+                        'Anda yakin telah menolak penerimaan ini?'
+                    );
+                    confirmation.setTitle('Validasi tolak');
+                    confirmation.setOnConfirmYesAction(() => () => {
+                        validationProcess({
+                            penerimaanId,
+                            validationStatus: 2,
+                            summary: rejectionReason,
+                        });
                     });
                     confirmation.setOpen(true);
                 }}

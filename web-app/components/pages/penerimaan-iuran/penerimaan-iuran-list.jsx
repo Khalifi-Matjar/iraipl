@@ -110,6 +110,7 @@ export const PenerimaanIuranList = () => {
             <PenerimaanIuranCard
                 penerimaanIuran={highlightedPenerimaan}
                 hasDeleteButton={true}
+                hasPrintButton={true}
                 onDelete={(penerimaanIuranId) =>
                     void setConfirmModalProps({
                         open: true,

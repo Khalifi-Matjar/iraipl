@@ -43,9 +43,7 @@ router.get('/rincian-penerimaan-iuran', async function (req, res, next) {
                     },
                 },
                 {
-                    '$PenerimaanIuranValidasi.id$': {
-                        [Op.not]: null,
-                    },
+                    '$PenerimaanIuranValidasi.validationStatus$': 1,
                 },
                 {
                     iuranId,
