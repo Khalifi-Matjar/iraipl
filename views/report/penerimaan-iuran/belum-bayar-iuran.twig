@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+    <head>
+        <title>IRA IPL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style type="text/css">
+            h1, h2, h3, h4, h5, h6 {
+                margin: 0;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 12px;
+            }
+            table {
+                width: 100%;
+                table-layout: auto;
+                border-collapse: collapse;
+            }
+            tbody tr:nth-child(odd) {
+                background-color: #cccccc4d;
+            }
+            th,td {
+                padding: 5px;
+            }
+            hr {
+                border: solid 1px #cccccc4d;
+            }
+            .total {
+                font-weight: 500;
+                background-color: transparent !important;
+                border-top: double 4px;
+            }
+        </style>
+        <style type="text/css" media="print">
+            @page {
+                margin: 1.5cm 1cm 1.5cm 2.5cm;
+                size: portrait;
+            }
+            table {
+                font-size: 85%;
+            }
+            th,td {
+                padding: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Laporan Penduduk Belum Bayar Iuran</h1>
+        <h3>Tanggal {{from|date('d F Y')}} S/D {{to|date('d F Y')}}</h3>
+        <h3>Jenis Iuran: {{iuranType}}</h3>
+        <h3>Tipe Pembayaran: {{payment}}</h3>
+        <br />
+        <table>
+            <thead>
+                <tr>
+                    <th width="20px" align="right" rowspan="2">No.</th>
+                    <th align="left" rowspan="2">Perumahan</th>
+                    <th align="left" rowspan="2">Alamat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = 0 %}
+                {% for pendudukBelumBayar in pendudukBelumBayar %}
+                    {% set total = total + 1 %}
+                    <tr>
+                        <td align="right">{{loop.index}}</td>
+                        <td>{{pendudukBelumBayar.perumahan}}</td>
+                        <td>{{pendudukBelumBayar.address}}</td>
+                    </tr>
+                {% endfor %}
+                <tr class="total">
+                    <td colspan="2">Total</td>
+                    <td align="left">{{ total|number_format(0) }} Penduduk</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -4,6 +4,7 @@ import { MasterPage } from '../master-page';
 import { LaporanRincianPenerimaan } from './laporan-rincian-penerimaan';
 import { LaporanRekapPenerimaanKolektor } from './laporan-rekap-penerimaan-kolektor';
 import { LaporanRekapPerIuran } from './laporan-rekap-per-iuran';
+import { LaporanBelumBayar } from './laporan-belum-bayar-iuran';
 
 export const LaporanPenerimaanIuran = () => {
     const laporanPenerimaanTabChildren = useMemo(
@@ -19,6 +20,10 @@ export const LaporanPenerimaanIuran = () => {
             {
                 title: 'Rekap per Iuran',
                 children: <LaporanRekapPerIuran />,
+            },
+            {
+                title: 'Penduduk Belum Bayar',
+                children: <LaporanBelumBayar />,
             },
         ],
         []
