@@ -195,6 +195,50 @@ router.get('/rekap-per-iuran', async function (req, res, next) {
     });
 });
 
+router.get('/belum-bayar-iuran', async function (req, res, next) {
+    const { period, iuranId } = req.query;
+    const periodDate = `${period}-01`;
+
+    const [pendudukBelumBayar] = await db.sequelize.query(
+        `
+            SELECT
+                penduduk.*, perumahan.perumahan
+            FROM
+                \`tbl-master-penduduk\` penduduk
+                LEFT JOIN \`tbl-master-perumahan\` perumahan ON penduduk.perumahanId = perumahan.id
+            WHERE
+                penduduk.id NOT IN (
+                SELECT
+                    penerimaan.pendudukId 
+                FROM
+                    \`tbl-penerimaan-iuran\` penerimaan
+                    INNER JOIN \`tbl-penerimaan-iuran-validasi\` validasi ON penerimaan.id = validasi.penerimaanId 
+                WHERE
+                    CONCAT( periodStart, '-01' ) <= $periodDate AND LAST_DAY( CONCAT( periodEnd, '-01' ) ) >= $periodDate 
+                    AND iuranId = $iuranId 
+                AND validasi.validationStatus = '1' 
+                )
+                ORDER BY
+                    perumahan.perumahan ASC, address ASC
+            `,
+        {
+            bind: {
+                periodDate,
+                iuranId,
+            },
+        }
+    );
+
+    res.render('report/penerimaan-iuran/belum-bayar-iuran', {
+        period,
+        iuranId,
+        pendudukBelumBayar,
+        debug: JSON.stringify({
+            pendudukBelumBayar,
+        }),
+    });
+});
+
 router.get('/receipt', async function (req, res, next) {
     const { id } = req.query;
 
