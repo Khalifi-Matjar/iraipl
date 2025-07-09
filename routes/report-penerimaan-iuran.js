@@ -229,9 +229,13 @@ router.get('/belum-bayar-iuran', async function (req, res, next) {
         }
     );
 
+    const iuran = await db.MasterIuran.findByPk(iuranId);
+
     res.render('report/penerimaan-iuran/belum-bayar-iuran', {
         period,
+        periodDay: `${period}-01`,
         iuranId,
+        iuranName: iuran.iuranName,
         pendudukBelumBayar,
         debug: JSON.stringify({
             pendudukBelumBayar,
