@@ -188,8 +188,22 @@ router.delete('/delete', async function (req, res, _next) {
         const id = req.query.id;
 
         try {
-            const penerimaanIuran = await db.PenerimaanIuran.findByPk(id);
-            await penerimaanIuran.destroy();
+            // Find how many penerimaan iuran exist in the PenerimaanIuranValidasi table
+            const penerimaanIuranValidasi =
+                await db.PenerimaanIuranValidasi.findAll({
+                    where: {
+                        penerimaanId: id,
+                    },
+                });
+
+            if (penerimaanIuranValidasi.length === 1) {
+                const penerimaanIuran = await db.PenerimaanIuran.findByPk(id);
+                await penerimaanIuran.destroy();
+            } else {
+                for (let i = 1; i < penerimaanIuranValidasi.length; i++) {
+                    await penerimaanIuranValidasi[i].destroy();
+                }
+            }
 
             httpResponseCode = 200;
             httpResponse = {
