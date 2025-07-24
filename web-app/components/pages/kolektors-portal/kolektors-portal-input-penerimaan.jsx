@@ -84,6 +84,7 @@ export const KolektorsPortalInputPenerimaan = () => {
                 gridColumn: 3,
                 type: 'date',
                 validationSchema: Yup.date().required('Berikan tgl transaksi'),
+                readOnly: true,
             },
             {
                 name: 'paymentType',
