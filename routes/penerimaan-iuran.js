@@ -196,8 +196,6 @@ router.delete('/delete', async function (req, res, _next) {
                     },
                 });
 
-            console.log('penerimaanIuranValidasi', penerimaanIuranValidasi);
-
             if (penerimaanIuranValidasi.length <= 1) {
                 const penerimaanIuran = await db.PenerimaanIuran.findByPk(id);
                 await penerimaanIuran.destroy();
