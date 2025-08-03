@@ -131,16 +131,72 @@ router.post('/add', async function (req, res, _next) {
         } = req.body;
 
         try {
-            const penerimaan = await db.PenerimaanIuran.create({
-                transactionDate,
-                amount,
-                iuranId,
-                pendudukId,
-                kolektorId: isAddByKolektor ? findUser.Kolektor.id : kolektorId,
-                periodStart,
-                periodEnd,
-                paymentType,
-                summary,
+            let penerimaan;
+            await db.sequelize.transaction(async (t) => {
+                const currentDate = moment(`${periodStart}-01`);
+                const endDate = moment(`${periodEnd}-01`);
+                const paidPeriod = [];
+
+                // Only check credential of data if penduduk ID is provided
+                if (pendudukId) {
+                    do {
+                        const strCurrentDate = currentDate.format('YYYY-MM-DD');
+
+                        // Checking whether the current period has been paid or not
+                        const [paid] = await db.sequelize.query(
+                            `
+                            SELECT
+                                * 
+                            FROM
+                                \`tbl-penerimaan-iuran\` 
+                            WHERE
+                                iuranId = $iuranId 
+                                AND pendudukId = $pendudukId 
+                                AND $date BETWEEN CONCAT( periodStart, '-01' ) 
+                                AND LAST_DAY( CONCAT( periodEnd, '-01' ) )
+                        `,
+                            {
+                                bind: {
+                                    pendudukId,
+                                    iuranId,
+                                    date: strCurrentDate,
+                                },
+                            },
+                            {
+                                transaction: t,
+                            }
+                        );
+
+                        if (paid.length > 0) {
+                            paidPeriod.push(strCurrentDate);
+                        }
+
+                        currentDate.add(1, 'M');
+                    } while (currentDate <= endDate);
+                }
+
+                if (paidPeriod.length === 0) {
+                    penerimaan = await db.PenerimaanIuran.create(
+                        {
+                            transactionDate,
+                            amount,
+                            iuranId,
+                            pendudukId,
+                            kolektorId: isAddByKolektor
+                                ? findUser.Kolektor.id
+                                : kolektorId,
+                            periodStart,
+                            periodEnd,
+                            paymentType,
+                            summary,
+                        },
+                        { transaction: t }
+                    );
+                } else {
+                    throw new Error(
+                        `Some period has been paid for ${JSON.stringify(paidPeriod)}`
+                    );
+                }
             });
 
             httpResponseCode = 200;
@@ -188,22 +244,32 @@ router.delete('/delete', async function (req, res, _next) {
         const id = req.query.id;
 
         try {
-            // Find how many penerimaan iuran exist in the PenerimaanIuranValidasi table
-            const penerimaanIuranValidasi =
-                await db.PenerimaanIuranValidasi.findAll({
-                    where: {
-                        penerimaanId: id,
-                    },
-                });
+            await db.sequelize.transaction(async (t) => {
+                // Find how many penerimaan iuran exist in the PenerimaanIuranValidasi table
+                const penerimaanIuranValidasi =
+                    await db.PenerimaanIuranValidasi.findAll(
+                        {
+                            where: {
+                                penerimaanId: id,
+                            },
+                        },
+                        { transaction: t }
+                    );
 
-            if (penerimaanIuranValidasi.length <= 1) {
-                const penerimaanIuran = await db.PenerimaanIuran.findByPk(id);
-                await penerimaanIuran.destroy();
-            } else {
-                for (let i = 1; i < penerimaanIuranValidasi.length; i++) {
-                    await penerimaanIuranValidasi[i].destroy();
+                if (penerimaanIuranValidasi.length <= 1) {
+                    const penerimaanIuran = await db.PenerimaanIuran.findByPk(
+                        id,
+                        { transaction: t }
+                    );
+                    await penerimaanIuran.destroy({ transaction: t });
+                } else {
+                    for (let i = 1; i < penerimaanIuranValidasi.length; i++) {
+                        await penerimaanIuranValidasi[i].destroy({
+                            transaction: t,
+                        });
+                    }
                 }
-            }
+            });
 
             httpResponseCode = 200;
             httpResponse = {
@@ -249,12 +315,33 @@ router.post('/validate', async function (req, res, _next) {
         const { penerimaanId, validationStatus, summary } = req.body;
 
         try {
-            await db.PenerimaanIuranValidasi.create({
-                validationDate: new Date(),
-                penerimaanId,
-                validatedBy: findUser.id,
-                validationStatus,
-                summary,
+            await db.sequelize.transaction(async (t) => {
+                const penerimaanIuranValidasi =
+                    await db.PenerimaanIuranValidasi.findAll(
+                        {
+                            where: {
+                                penerimaanId,
+                            },
+                        },
+                        { transaction: t }
+                    );
+
+                if (penerimaanIuranValidasi.length === 0) {
+                    await db.PenerimaanIuranValidasi.create(
+                        {
+                            validationDate: new Date(),
+                            penerimaanId,
+                            validatedBy: findUser.id,
+                            validationStatus,
+                            summary,
+                        },
+                        { transaction: t }
+                    );
+                } else {
+                    throw new Error(
+                        `This data has been validated somewhere else. Please refresh your browser to get the latest data`
+                    );
+                }
             });
 
             httpResponseCode = 200;
