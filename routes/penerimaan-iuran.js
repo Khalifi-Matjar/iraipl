@@ -13,8 +13,14 @@ router.get('/find', async function (req, res, _next) {
 
     if (!!findUser) {
         try {
-            const { id, range, withKolektor, isMyCollective, isValidated } =
-                req.query;
+            const {
+                id,
+                range,
+                withKolektor,
+                isMyCollective,
+                isValidated,
+                kolektorId,
+            } = req.query;
             const penerimaanIuran = await db.PenerimaanIuran.findAll({
                 include: [
                     {
@@ -39,6 +45,9 @@ router.get('/find', async function (req, res, _next) {
                     [Op.and]: [
                         id && {
                             id,
+                        },
+                        kolektorId && {
+                            kolektorId,
                         },
                         range && {
                             transactionDate: {
@@ -73,6 +82,7 @@ router.get('/find', async function (req, res, _next) {
                 order: [
                     ['transactionDate', 'ASC'],
                     [db.Penduduk, db.Perumahan, 'perumahan', 'ASC'],
+                    [db.Penduduk, 'address', 'ASC'],
                     ['createdAt', 'ASC'],
                 ],
             });
