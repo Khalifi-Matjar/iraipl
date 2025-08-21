@@ -48,7 +48,7 @@ export const PenerimaanIuranList = () => {
     } = usePenerimaanIuran();
 
     const listPenerimaanIuranData = useCallback(
-        ({ from, to }) => {
+        ({ from, to, ...restParams }) => {
             listData({
                 range: JSON.stringify({
                     from,
@@ -57,6 +57,7 @@ export const PenerimaanIuranList = () => {
                 withKolektor:
                     penerimaanIuranPage.type ===
                     PenerimaanIuranType.WITH_KOLEKTOR,
+                ...restParams,
             })
                 .then((response) => {
                     setPenerimaanIuranTblData(response.data.penerimaanIuran);

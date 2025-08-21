@@ -1,7 +1,8 @@
 import { Button, Chip } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { monthList } from '../../../utils/constants';
 import { dateFormat, formatDate, formatMoney } from '../../../utils';
+import { listData as listDataKolektor } from '../kolektor/kolektor-functions';
 
 export const usePenerimaanIuran = () => {
     const [highlightedPenerimaan, setHighlightedPenerimaan] = useState(null);
@@ -74,10 +75,23 @@ export const usePenerimaanIuran = () => {
                     );
                 },
             },
+            {
+                header: 'Kolektor',
+                accessorKey: 'Kolektor.name',
+            },
         ],
         []
     );
     const [penerimaanIuranTblData, setPenerimaanIuranTblData] = useState([]);
+
+    const [listKolektor, setListKolektor] = useState([]);
+
+    useEffect(() => {
+        // call list all kolektor
+        listDataKolektor((kolektor) => {
+            setListKolektor(kolektor);
+        });
+    }, []);
 
     const penerimaanIuranSearchFormDef = useMemo(
         () => [
@@ -97,8 +111,19 @@ export const usePenerimaanIuran = () => {
                 gridColumnSmall: 6,
                 type: 'date',
             },
+            {
+                name: 'kolektorId',
+                id: 'kolektorId',
+                label: 'Kolektor',
+                gridColumn: 3,
+                gridColumnSmall: 12,
+                options: listKolektor.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                })),
+            },
         ],
-        []
+        [listKolektor]
     );
 
     const [searchFormValue, setSearchFormValue] = useState({
@@ -110,6 +135,7 @@ export const usePenerimaanIuran = () => {
         () => ({
             from: searchFormValue.from,
             to: searchFormValue.to,
+            kolektorId: searchFormValue.kolektorId,
         }),
         [searchFormValue]
     );
